@@ -1,0 +1,17 @@
+/* Layout: Home */
+.home {
+    justify-content: left;
+}
+
+.illu-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.illustration {
+    max-width: 180px;
+    max-height: var(--image-max-width);
+    margin-top: 1rem;
+    margin-right: 2rem;
+    transform: rotate(16deg);
+}

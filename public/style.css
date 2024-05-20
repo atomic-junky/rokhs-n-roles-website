@@ -1,0 +1,55 @@
+/* Post */
+.post {
+  place-items: normal;
+}
+
+.postTitle {
+  font-size: 4rem;
+  color: #000000;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+.controls {
+  margin: 3rem 0 2rem;
+}
+
+.blog-card {
+  font-family: Monocraft;
+  border-image: url("https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/paper_blog.png?v=1714414377546")
+    round;
+  border-image-slice: 15 31 15 27 fill;
+  image-rendering: pixelated;
+  border-image-width: 60px 124px;
+  box-sizing: border-box;
+  padding: 47px 35px 47px 35px;
+  max-width: 760px;
+  width: auto;
+  color: black;
+  margin: 0 10px 0 10px;
+  min-height: 128px;
+  width: 100%;
+  max-width: 760px;
+}
+
+.blog-links {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 10px 0;
+  gap: 35px;
+}
+
+.blog-card-container h3, .blog-card-container p {
+  margin: 0;
+}
+
+.blog-card-container h3 {
+  font-family: Monocraft;
+  font-size: 1.5rem;
+}
+
+.blog-card-container img {
+  margin: 10px 0;
+}

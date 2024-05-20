@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    {# This is the base template for the site–other templates extend this one #}
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Lcd6m" />
+    <link rel="stylesheet" type="text/css" href="/css/master.css" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.3.0/uicons-brands/css/uicons-brands.css">
+    <script src="/script.js"></script>
+    <link rel="icon" href="/assets/favicons/favicon.ico" />
+    <meta name="theme-color" content="#ffffff">
+    {% seo "" %}
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+  <main>
+    
+    <header id="header">
+      <img class="header-img" src="/assets/lcd6m_header_logo.png">      
+      
+      <div class="header-content">
+        <div class="header-links" id="navbar">
+            <a href="/">Accueil</a>
+            <a href="/blog">Blog</a>
+            <a href="/about">A propos</a>
+            <a href="/contact">Contact</a>
+          </div>
+        </div>
+    </header>
+    
+    {# Page or post content will appear here #}
+  
+    {{ content | safe }}
+
+      <footer id="footer">
+        <div class="links">
+          <a href="https://www.instagram.com/la_confrerie_d6_maitres/">
+            <i class="fi fi-brands-instagram"></i>
+          </a>
+          <a href="https://www.facebook.com/laconfreried6maitres/">
+            <i class="fi fi-brands-facebook"></i>
+          </a>
+          <a href="https://github.com/atomic-junky/lcd6m-blog/">
+            <i class="fi fi-brands-github"></i>
+          </a>
+          <a href="https://www.fontenay.fr/citoyennete-vie-associative/vie-associative/annuaire-des-associations-256/la-confrerie-d6-maitres-lcd6m-3668.html">
+            <img height="50px" src="/assets/logo_fontenay.svg">
+          </a>
+        </div>
+      </footer>
+    
+  </main>
+   
+  </body>
+</html>
