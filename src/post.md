@@ -1,12 +1,11 @@
 ---
-title: "{{ post.title }}"
-layout: layouts/base.njk
+title: '{{ post.data.title }}'
+layout: layouts/post.njk
 pagination:
   data: posts
   size: 1
   alias: post
-permalink: "{{ post.url }}/index.html"
+permalink: '{{ post.url }}/index.html'
 ---
-
 
 {{ post.content }}

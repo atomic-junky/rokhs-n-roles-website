@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config()
 const { createClient } = require('@sanity/client')
 
 const projectId = process.env.SANITY_PROJECT_ID || ''
@@ -8,11 +8,11 @@ const useCdn = process.env.SANITY_USE_CDN || false
 const apiVersion = process.env.SANITY_API_VERSION || '2022-07-27'
 
 const client = createClient({
-  projectId,
-  dataset,
-  token,
-  useCdn,
-  apiVersion
+	projectId,
+	dataset,
+	token,
+	useCdn,
+	apiVersion
 })
 
 module.exports = client

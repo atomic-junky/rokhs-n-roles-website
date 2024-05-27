@@ -12,11 +12,10 @@ Nous sommes une **association de jeu de rôle** fondée en 2016, ayant pour but 
 Explorez notre site pour en savoir plus sur nos activités à venir. Rejoignez nous et laissez votre imagination prendre le pouvoir !
 
 La Confrérie D6 Maîtres vous accueille à bras ouverts.
-  
+
 <img src="https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/Banner.png?v=1702816959296">
 
 </div>
-
 
 <div class="note">
   

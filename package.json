@@ -1,37 +1,39 @@
 {
-  "name": "lcd6m-website",
-  "version": "0.1.0",
-  "description": "A simple blog, set up with Eleventy.",
-  "scripts": {
-    "start": "eleventy --serve",
-    "build": "eleventy"
-  },
-  "dependencies": {
-    "@11ty/eleventy-navigation": "^0.3.5",
-    "@11ty/eleventy-plugin-rss": "^1.2.0",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-    "@sanity/block-content-to-markdown": "^0.0.5",
-    "@sanity/client": "^6.18.3",
-    "@sanity/image-url": "^1.0.2",
-    "dotenv": "^16.4.5",
-    "luxon": "^3.4.4",
-    "markdown-it": "^14.1.0",
-    "markdown-it-anchor": "^9.0.1"
-  },
-  "devDependencies": {
-    "@11ty/eleventy": "^2.0.0",
-    "eleventy-plugin-gen-favicons": "^1.1.2"
-  },
-  "engines": {
-    "node": "16"
-  },
-  "repository": {
-    "url": "https://glitch.com/edit/#!/glitch-hello-eleventy"
-  },
-  "license": "MIT",
-  "keywords": [
-    "node",
-    "eleventy",
-    "vite"
-  ]
+	"name": "lcd6m-website",
+	"version": "0.1.0",
+	"description": "A simple blog, set up with Eleventy.",
+	"scripts": {
+		"start": "eleventy --serve",
+		"build": "eleventy",
+		"format": "prettier --log-prelevel warn --write \"./**/*\""
+	},
+	"dependencies": {
+		"@11ty/eleventy-navigation": "^0.3.5",
+		"@11ty/eleventy-plugin-rss": "^1.2.0",
+		"@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+		"@sanity/block-content-to-markdown": "^0.0.5",
+		"@sanity/client": "^6.18.3",
+		"@sanity/image-url": "^1.0.2",
+		"dotenv": "^16.4.5",
+		"luxon": "^3.4.4",
+		"markdown-it": "^14.1.0",
+		"markdown-it-anchor": "^9.0.1"
+	},
+	"devDependencies": {
+		"@11ty/eleventy": "^2.0.0",
+		"eleventy-plugin-gen-favicons": "^1.1.2",
+		"prettier": "3.2.5"
+	},
+	"engines": {
+		"node": "16"
+	},
+	"repository": {
+		"url": "https://glitch.com/edit/#!/glitch-hello-eleventy"
+	},
+	"license": "MIT",
+	"keywords": [
+		"node",
+		"eleventy",
+		"vite"
+	]
 }

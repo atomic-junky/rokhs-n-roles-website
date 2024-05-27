@@ -1,0 +1,17 @@
+*.njk
+*.svg
+*.png
+*.ttf
+*.otf
+*.ico
+
+LICENSE
+
+.editorconfig
+*.example
+.gitattributes
+.gitignore
+.htaccess
+.nojekyll
+.nvmrc
+.prettierignore
