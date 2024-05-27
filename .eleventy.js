@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { DateTime } = require("luxon");
 const markdownIt = require('markdown-it');
 const markdownItAnchor = require('markdown-it-anchor');
@@ -7,6 +6,8 @@ const EleventyPluginSyntaxhighlight = require('@11ty/eleventy-plugin-syntaxhighl
 const EleventyPluginRss = require('@11ty/eleventy-plugin-rss');
 const faviconsPlugin = require("eleventy-plugin-gen-favicons");
 const { urlFor } = require('./src/_sanity/imageUrl.js');
+
+require("dotenv").config();
 
 
 /**
