@@ -7,6 +7,8 @@ const EleventyPluginRss = require('@11ty/eleventy-plugin-rss');
 const faviconsPlugin = require("eleventy-plugin-gen-favicons");
 const { urlFor } = require('./src/_sanity/imageUrl.js');
 
+require("dotenv").config();
+
 
 /**
  * Eleventy configuration
