@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var windowHref = getAccurateUrl(window.location.href);
     var linkHref = getAccurateUrl(link.href);
     
-    console.log(windowHref);
-    
     if (linkHref == windowHref) {
       link.classList.add("active");
     }

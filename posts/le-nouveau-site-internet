@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
-    {# This is the base template for the site–other templates extend this one #}
-    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Lcd6m" />
+		
+<meta name="description" content="I am writing about my experiences as a naval navel-gazer.">
+<link rel="canonical" href="http://localhost:8080/posts/le-nouveau-site-internet">
+<meta name="author" content="AtomicJunky">
+<meta name="generator" content="Eleventy v2.0.0">
+
+
+<meta property="og:site_name" content="La Confrérie D6 Maîtres">
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:description" content="I am writing about my experiences as a naval navel-gazer.">
+<meta property="og:url" content="http://localhost:8080/posts/le-nouveau-site-internet">
+<meta property="og:locale" content="Fr-fr">
+<meta name="twitter:card" content="summary_large_image"><meta property="og:image" content="http://localhost:8080/assets/images/site.og-image.png">
+<link rel="icon" href="/assets/favicons/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/assets/favicon/favicon-16x16.png" sizes="16x16">
+<link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+<link rel="manifest" href="/site.webmanifest"><meta name="theme-color" content="#FFFFFF">
+    
+    <script src="/script.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/master.css" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.3.0/uicons-brands/css/uicons-brands.css">
-    <script src="/script.js"></script>
-    <link rel="icon" href="/assets/favicons/favicon.ico" />
-    <meta name="theme-color" content="#ffffff">
-    {% seo "" %}
-    {% block head %}{% endblock %}
   </head>
   <body>
   <main>
@@ -32,9 +44,11 @@
         </div>
     </header>
     
-    {# Page or post content will appear here #}
+    
   
-    {{ content | safe }}
+    <p>Oyez oyez ! Le site internet de la Confrérie D6 Maîtres viens d'être refait !</p>
+<p>Il paraitrait même qu'il soit open source 🤯!</p>
+
 
       <footer id="footer">
         <div class="links">
