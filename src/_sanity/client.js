@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { createClient } = require('@sanity/client')
 
 const projectId = process.env.SANITY_PROJECT_ID || ''

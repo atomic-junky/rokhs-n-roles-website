@@ -9,7 +9,6 @@ const faviconsPlugin = require("eleventy-plugin-gen-favicons");
 const { urlFor } = require('./src/_sanity/imageUrl.js');
 
 
-
 /**
  * Eleventy configuration
  */
