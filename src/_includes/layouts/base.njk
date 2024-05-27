@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ meta.lang }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title + ' | ' + meta.short_title if title else meta.title }}</title>
 		{% include "meta.njk" %}
     {% block head %}{% endblock %}
     <script src={{ 'js/script.js' | toAbsoluteUrl }}></script>

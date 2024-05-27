@@ -1,5 +1,4 @@
 ---
-title: '{{ post.data.title }}'
 layout: layouts/post.njk
 pagination:
   data: posts
