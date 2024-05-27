@@ -25,7 +25,7 @@
 		"prettier": "3.2.5"
 	},
 	"engines": {
-		"node": "16"
+		"node": "18"
 	},
 	"repository": {
 		"url": "https://glitch.com/edit/#!/glitch-hello-eleventy"
