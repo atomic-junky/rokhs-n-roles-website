@@ -72,6 +72,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("toAbsoluteUrl", url => {
     const base = eleventyConfig.globalData.baseUrl;
 
+    if (url.startsWith("/"))
+      url = url.slice(1)
+
     try {
       return new URL(url, base).href;
     } catch (err) {

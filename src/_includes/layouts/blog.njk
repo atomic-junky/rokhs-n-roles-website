@@ -14,7 +14,7 @@ templateClass: tmpl-home
             <p>
               {{ post.data.date | htmlDateString }}
             </p>
-            <a href="{{ post.url }}">
+            <a href="{{ post.url | toAbsoluteUrl }}">
               <h3>
                 {{ post.data.title }}
               </h3>
