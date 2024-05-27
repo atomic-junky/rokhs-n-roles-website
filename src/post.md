@@ -5,7 +5,7 @@ pagination:
   data: posts
   size: 1
   alias: post
-permalink: "{{ post.url }}"
+permalink: "{{ post.url }}/index.html"
 ---
 
 
