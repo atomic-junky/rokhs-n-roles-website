@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { DateTime } = require("luxon");
 const markdownIt = require('markdown-it');
 const markdownItAnchor = require('markdown-it-anchor');
@@ -7,13 +8,15 @@ const EleventyPluginRss = require('@11ty/eleventy-plugin-rss');
 const faviconsPlugin = require("eleventy-plugin-gen-favicons");
 const { urlFor } = require('./src/_sanity/imageUrl.js');
 
-require("dotenv").config();
 
 
 /**
  * Eleventy configuration
  */
 module.exports = function (eleventyConfig) {
+  // Global data
+  eleventyConfig.addGlobalData("baseUrl", process.env.CONFIG_BASE_URL);
+
   // Plugins
   eleventyConfig.addPlugin(EleventyPluginNavigation);
   eleventyConfig.addPlugin(EleventyPluginRss);
@@ -64,6 +67,17 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addFilter("imageUrl", assetObj => {
     return urlFor(assetObj);
+  });
+
+  eleventyConfig.addFilter("toAbsoluteUrl", url => {
+    const base = eleventyConfig.globalData.baseUrl;
+
+    try {
+      return new URL(url, base).href;
+    } catch (err) {
+      console.error(err);
+      return url;
+    }
   });
 
   // Markdown Configuration

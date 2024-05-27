@@ -1,4 +1,4 @@
-{%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(meta.url) }}{%- endset -%}
+{% set pageUrl = page.url | toAbsoluteUrl %}
 
 {# General #}
 <meta name="description" content="{{ description or meta.description }}">

@@ -6,12 +6,7 @@ on:
       - main
   pull_request:
 
-env:
-  SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
-  SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
-  SANITY_API_VERSION: ${{ secrets.SANITY_API_VERSION }}
-  SANITY_USE_CDN: ${{ secrets.SANITY_USE_CDN }}
-
+    
 jobs:
   deploy:
     runs-on: ubuntu-22.04

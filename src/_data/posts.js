@@ -12,9 +12,6 @@ module.exports = async function () {
     const url = `/posts/${post.slug.current}`;
     const content = toMarkdown(post.body);
 
-    
-    console.log(urlFor(post.mainImage));
-
     return {
       url: url,
       page: {

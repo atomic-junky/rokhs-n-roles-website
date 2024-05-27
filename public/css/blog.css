@@ -4,7 +4,6 @@
     border-image: url("../assets/blog-note-box.png")
       round;
     border-image-slice: 18 14 14 15 fill;
-    /* border-image-slice: 15 31 15 27 fill; */
     image-rendering: pixelated;
     border-image-width: 72px 56px 56px 60px;
     box-sizing: border-box;
