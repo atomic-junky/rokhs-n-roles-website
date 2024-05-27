@@ -1,28 +1,27 @@
 ---
-layout: layouts/base.njk
+layout: layouts/page.njk
 templateClass: tmpl-home
 ---
 
-{# <style>
-  {% include "/assets/home.css" %}
-</style> #}
 
 <div class="wrapper home">
   <div class="content">
     {{ content | safe }}
     <div class="blog-links">
-      {%- for post in collections.posts -%}
+      {%- for post in posts -%}
         <div class="blog-card">
           <div class="blog-card-container">
             <p>
-              {{ post.data.page.date | htmlDateString }}
+              {{ post.data.date | htmlDateString }}
             </p>
             <a href="{{ post.url }}">
               <h3>
                 {{ post.data.title }}
               </h3>
             </a>
-            <img src="https://picsum.photos/700/250">
+            {% if post.data.previewImage %}
+              <img class="blog-card-image" src="{{ post.data.previewImage }}">
+            {% endif %}
             <div class="blog-card-content">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </div>

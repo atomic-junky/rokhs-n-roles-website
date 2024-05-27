@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
-    {# This is the base template for the site–other templates extend this one #}
-    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Lcd6m" />
+		{% include "meta.njk" %}
+    {% block head %}{% endblock %}
+    <script src="/script.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/master.css" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.3.0/uicons-brands/css/uicons-brands.css">
-    <script src="/script.js"></script>
-    <link rel="icon" href="/assets/favicons/favicon.ico" />
-    <meta name="theme-color" content="#ffffff">
-    {% seo "" %}
-    {% block head %}{% endblock %}
   </head>
   <body>
   <main>

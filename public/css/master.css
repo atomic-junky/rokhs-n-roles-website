@@ -174,13 +174,13 @@ a {
 /* Global markdown style */
 .note {
     font-family: Monocraft;
-    border-image: url("https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/box.png")
+    border-image: url("../assets/note-box-v2.png")
       round;
-    border-image-slice: 7 31 fill;
+    border-image-slice: 13 50 13 36 fill;
     image-rendering: pixelated;
-    border-image-width: 28px 124px;
+    border-image-width: 52px 200px 52px 144px;
     box-sizing: border-box;
-    padding: 30px 40px 20px 40px;
+    padding: 70px 60px;
     max-width: 760px;
     width: auto;
     color: black;
@@ -198,18 +198,18 @@ a {
 
 .note > h4 {
     font-family: Monocraft;
-    border-image: url("https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/header-box.png")
+    border-image: url("../assets/header-note-box-v2.png")
       round;
-    border-image-slice: 9 13 3 fill;
+    border-image-slice: 2 15 7 fill;
     image-rendering: pixelated;
-    border-image-width: 36px 52px 12px;
+    border-image-width: 8px 60px 28px;
+    /* border-image-width: 36px 52px 12px; */
     box-sizing: border-box;
-    padding: 20px 40px 40px 40px;
+    padding: 8px 60px 28px 60px;
     width: fit-content;
     margin: 0;
-    padding: 30px 50px 5px 50px;
     position: absolute;
-    transform: translateY(calc(-29px - 100%));
+    transform: translateY(calc(-38px - 100%)) translateX(-30px);
     font-size: 24px;
     line-height: 26px;
     color: black;

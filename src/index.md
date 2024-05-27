@@ -20,7 +20,7 @@ La Confrérie D6 Maîtres vous accueille à bras ouverts.
 
 <div class="note">
   
-  #### Horraires
+  Horraires
   
   - **Vendredi:** 18h - 22h30
   - **Samedi:** 14h -16h30

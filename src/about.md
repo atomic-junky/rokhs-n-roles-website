@@ -1,5 +1,5 @@
 ---
-name: À propos
+title: À propos
 layout: layouts/page.njk
 ---
 

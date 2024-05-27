@@ -1,13 +1,14 @@
 /* Layout: Blog */
 .blog-card {
     font-family: Monocraft;
-    border-image: url("https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/paper_blog.png?v=1714414377546")
+    border-image: url("../assets/blog-note-box.png")
       round;
-    border-image-slice: 15 31 15 27 fill;
+    border-image-slice: 18 14 14 15 fill;
+    /* border-image-slice: 15 31 15 27 fill; */
     image-rendering: pixelated;
-    border-image-width: 60px 124px;
+    border-image-width: 72px 56px 56px 60px;
     box-sizing: border-box;
-    padding: 47px 35px 47px 35px;
+    padding: 72px 56px 56px 60px;
     max-width: 760px;
     width: auto;
     color: black;
