@@ -18,11 +18,10 @@
 {%- endif -%}
 
 {# Favicon #}
-<link rel="icon" href="{{ './assets/favicons/favicon.ico' | toAbsoluteUrl }}" />
-<link rel="apple-touch-icon" sizes="180x180" href="{{ './assets/favicon/apple-touch-icon.png' | toAbsoluteUrl }}">
-<link rel="icon" type="image/png" href="{{ './assets/favicon/favicon-32x32.png' | toAbsoluteUrl }}" sizes="32x32">
-<link rel="icon" type="image/png" href="{{ './assets/favicon/favicon-16x16.png' | toAbsoluteUrl }}" sizes="16x16">
-<link rel="shortcut icon" href="{{ './assets/favicon/favicon.ico' | toAbsoluteUrl }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ './assets/favicons/apple-touch-icon.png' | toAbsoluteUrl }}">
+<link rel="icon" type="image/png" href="{{ './assets/favicons/favicon-32x32.png' | toAbsoluteUrl }}" sizes="32x32">
+<link rel="icon" type="image/png" href="{{ './assets/favicons/favicon-16x16.png' | toAbsoluteUrl }}" sizes="16x16">
+<link rel="shortcut icon" href="{{ './assets/favicons/favicon.ico' | toAbsoluteUrl }}">
 <link rel="manifest" href="{{ './site.webmanifest' | toAbsoluteUrl }}">
 {%- if meta.themeColor -%}
   <meta name="theme-color" content="{{ meta.themeColor }}">
