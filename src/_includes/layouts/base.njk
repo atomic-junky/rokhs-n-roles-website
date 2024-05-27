@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 		{% include "meta.njk" %}
     {% block head %}{% endblock %}
-    <script src={{ '/js/script.js' | toAbsoluteUrl }}></script>
+    <script src={{ 'js/script.js' | toAbsoluteUrl }}></script>
 		{% include "css-bundle.njk" %}
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.3.0/uicons-brands/css/uicons-brands.css">
   </head>
@@ -17,10 +17,10 @@
       
       <div class="header-content">
         <div class="header-links" id="navbar">
-            <a href={{ "/" | toAbsoluteUrl }}>Accueil</a>
-            <a href={{ "/blog" | toAbsoluteUrl }}>Blog</a>
-            <a href={{ "/about" | toAbsoluteUrl }}>A propos</a>
-            <a href={{ "/contact" | toAbsoluteUrl }}>Contact</a>
+            <a href={{ "" | toAbsoluteUrl }}>Accueil</a>
+            <a href={{ "blog" | toAbsoluteUrl }}>Blog</a>
+            <a href={{ "about" | toAbsoluteUrl }}>A propos</a>
+            <a href={{ "contact" | toAbsoluteUrl }}>Contact</a>
           </div>
         </div>
     </header>
