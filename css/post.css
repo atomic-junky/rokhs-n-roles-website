@@ -53,3 +53,9 @@
 .blog-card-container img {
 	margin: 10px 0;
 }
+
+@media screen and (max-width: 1150px) {
+	h1.postTitle {
+		font-size: 3rem;
+	}
+}
