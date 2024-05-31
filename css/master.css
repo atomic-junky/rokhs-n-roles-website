@@ -66,7 +66,7 @@ body {
 	align-items: center;
 	flex-flow: column wrap;
 	margin: 50px 0 100px 0;
-	gap: 150px;
+	gap: 50px;
 }
 
 .wrapper img {
@@ -205,6 +205,7 @@ a {
 	font-size: 24px;
 	line-height: 26px;
 	color: black;
+	margin-top: 40px;
 }
 
 /* Header */
@@ -229,6 +230,7 @@ a {
 }
 
 #header .header-content {
+	position: inherit;
 	justify-content: center;
 	align-items: center;
 	display: inline-flex;
@@ -243,6 +245,7 @@ a {
 	align-items: flex-end;
 	display: flex;
 	width: 100%;
+	height: 100%;
 	border: solid 1px black;
 	border-width: 1px 0 7px 0;
 }
@@ -255,6 +258,9 @@ a {
 	border-width: 0px 1px 0px 0px;
 	text-transform: uppercase;
 	font-size: 15px;
+	text-align: center;
+	text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #header .header-links a:first-child {
@@ -265,6 +271,21 @@ a {
 	box-shadow: 0px -7px 0px #fff;
 	background-color: var(--color-primary);
 	transform: translateY(5px);
+}
+
+@media screen and (max-width: 530px) {
+	#header .header-img {
+		width: 300px;
+		max-width: 100%;
+		height: auto;
+		margin-top: 20px;
+		cursor: pointer;
+	}
+
+	#header .header-links a {
+		width: 100%;
+		padding: 10px 10px;
+	}
 }
 
 /* Footer */
@@ -301,4 +322,25 @@ a {
 
 #footer i.fi {
 	font-size: 30px;
+}
+
+.list-unstyled {
+	list-style: none;
+}
+
+ul {
+	margin: 0;
+}
+
+ul.contact-list > li {
+	padding: 0 0 0 20px;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+    margin-bottom: 0px;
+}
+
+ul.contact-list > li > i {
+	position: absolute;
+	transform: translateX(-20px);
 }

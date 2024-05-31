@@ -30,11 +30,30 @@
 	margin: 0;
 }
 
-.blog-card-container h3 {
+.blog-card-title {
 	font-family: Monocraft;
 	font-size: 1.5rem;
+	border-block-end: solid 4px #000;
+	width: fit-content;
 }
 
-.blog-card-container img {
-	margin: 10px 0;
+.blog-card-title:after {
+	content: "->";
+	margin: 0 0 0 10px;
+	transition: ease-in-out .25s;
+	transform: translateX(20px);
+}
+
+.blog-card-title:hover:after {
+	margin: 0 0 0 20px;
+}
+
+.blog-card-container {
+	display: flex;
+	flex-flow: column nowrap;
+	gap: 10px;
+}
+
+.blog-card-date {
+	color: #00000080;
 }
