@@ -1,3 +1,5 @@
+var navbarInitialOffset;
+
 document.addEventListener(
 	'DOMContentLoaded',
 	function () {

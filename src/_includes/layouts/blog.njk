@@ -3,26 +3,23 @@ layout: layouts/page.njk
 templateClass: tmpl-home
 ---
 
-<div class="wrapper home">
-	<div class="content">
-		{{ content | safe }}
-		<div class="blog-links">
-			{%- for post in posts -%}
-			<div class="blog-card">
-				<div class="blog-card-container">
-					<p>{{ post.data.date | htmlDateString }}</p>
-					<a href="{{ post.url | toAbsoluteUrl }}">
-						<h3>{{ post.data.title }}</h3>
-					</a>
-					{% if post.data.previewImage %}
-					<img class="blog-card-image" src="{{ post.data.previewImage }}" />
-					{% endif %}
-					<div class="blog-card-content">
-						{{ post.data.previewContent }}
-					</div>
-				</div>
+{{ content | safe }}
+
+<div class="blog-links">
+	{%- for post in posts -%}
+	<div class="blog-card">
+		<div class="blog-card-container">
+			<a href="{{ post.url | toAbsoluteUrl }}">
+				<h3 class="blog-card-title">{{ post.data.title }}</h3>
+			</a>
+			<p class="blog-card-date">{{ post.data.date | htmlDateString }}</p>
+			{% if post.data.previewImage %}
+			<img class="blog-card-image" src="{{ post.data.previewImage }}" />
+			{% endif %}
+			<div class="blog-card-content">
+				{{ post.data.previewContent }}
 			</div>
-			{%- endfor -%}
 		</div>
 	</div>
+	{%- endfor -%}
 </div>
