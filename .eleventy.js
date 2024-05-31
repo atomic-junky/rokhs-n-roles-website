@@ -1,8 +1,7 @@
 const { DateTime } = require('luxon')
 const markdownIt = require('markdown-it')
-const markdownItAnchor = require('markdown-it-anchor')
+// const markdownItAnchor = require('markdown-it-anchor')
 const EleventyPluginNavigation = require('@11ty/eleventy-navigation')
-const EleventyPluginSyntaxhighlight = require('@11ty/eleventy-plugin-syntaxhighlight')
 const EleventyPluginRss = require('@11ty/eleventy-plugin-rss')
 const faviconsPlugin = require('eleventy-plugin-gen-favicons')
 const { urlFor } = require('./src/_sanity/imageUrl.js')
@@ -19,7 +18,6 @@ module.exports = function (eleventyConfig) {
 	// Plugins
 	eleventyConfig.addPlugin(EleventyPluginNavigation)
 	eleventyConfig.addPlugin(EleventyPluginRss)
-	eleventyConfig.addPlugin(EleventyPluginSyntaxhighlight)
 
 	// Template Formats
 	eleventyConfig.setTemplateFormats([
@@ -88,15 +86,7 @@ module.exports = function (eleventyConfig) {
 		html: true,
 		breaks: true,
 		linkify: true
-	}).use(markdownItAnchor, {
-		permalink: markdownItAnchor.permalink.ariaHidden({
-			placement: 'after',
-			class: 'direct-link',
-			symbol: '#',
-			level: [1, 2, 3, 4]
-		}),
-		slugify: eleventyConfig.getFilter('slug')
-	})
+	});
 	eleventyConfig.setLibrary('md', markdownLibrary)
 
 	// Eleventy Configuration

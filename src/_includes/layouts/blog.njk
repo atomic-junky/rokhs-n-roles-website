@@ -9,7 +9,7 @@ templateClass: tmpl-home
 	{%- for post in posts -%}
 	<div class="blog-card">
 		<div class="blog-card-container">
-			<a href="{{ post.url | toAbsoluteUrl }}">
+			<a class="no-style" href="{{ post.url | toAbsoluteUrl }}">
 				<h3 class="blog-card-title">{{ post.data.title }}</h3>
 			</a>
 			<p class="blog-card-date">{{ post.data.date | htmlDateString }}</p>

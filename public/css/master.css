@@ -66,7 +66,6 @@ body {
 	align-items: center;
 	flex-flow: column wrap;
 	margin: 50px 0 100px 0;
-	gap: 50px;
 }
 
 .wrapper img {
@@ -89,7 +88,7 @@ h2,
 h3,
 h4,
 h5 {
-	margin: 2rem 0 0.8rem;
+	margin: 2rem 0;
 	font-family: var(--font-family-header);
 	font-weight: 600;
 	line-height: 1.1;
@@ -145,6 +144,12 @@ ul.no-bullet {
 a {
 	text-decoration: none;
 	color: #000000;
+	border-bottom: solid 1px #000;
+	width: fit-content;
+}
+
+a.no-style {
+	border-bottom: none;
 }
 
 .footer > .links > a:hover {
@@ -177,7 +182,11 @@ a {
 	max-width: 760px;
 	width: auto;
 	color: black;
-	margin: 0 10px 0 10px;
+	margin: 40px 10px;
+}
+
+.note:has(> h4) {
+	margin-top: 70px;
 }
 
 .note * {
@@ -205,7 +214,6 @@ a {
 	font-size: 24px;
 	line-height: 26px;
 	color: black;
-	margin-top: 40px;
 }
 
 /* Header */
