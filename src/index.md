@@ -7,13 +7,13 @@ layout: layouts/home.njk
   
 Bienvenue à **La Confrérie D6 maîtres** !
 
-Nous sommes une **association de jeu de rôle** fondée en 2016, ayant pour but de promouvoir le jeu de rôle au sein de la commune de Fontenay mais pas que ! Plongez dans des aventures extraordinaires guidées par nos talentueux Maîtres du Jeu. Des mondes horrifiques du mythe de Cthulhu aux aventures loufoques des terres de Fangh (Naheulbeuk), laissez libre cours à votre imagination. Rejoignez notre communauté passionnée et partagez cette incroyable aventure et devenez peut-être à votre tour un Maître de Jeu.
+Nous sommes une **association de jeu de rôle** fondée en 2016, ayant pour but de promouvoir le jeu de rôle au sein de la commune de Fontenay, mais pas que ! Plongez dans des aventures extraordinaires guidées par nos talentueux Maîtres du Jeu. Des mondes horrifiques du mythe de Cthulhu aux aventures loufoques des terres de Fangh (Naheulbeuk), laissez libre cours à votre imagination. Rejoignez notre communauté passionnée et partagez cette incroyable aventure et devenez peut-être à votre tour un Maître de Jeu.
 
-Explorez notre site pour en savoir plus sur nos activités à venir. Rejoignez nous et laissez votre imagination prendre le pouvoir !
+Explorez notre site pour en savoir plus sur nos activités à venir. Rejoignez-nous et laissez votre imagination prendre le pouvoir !
 
 La Confrérie D6 Maîtres vous accueille à bras ouverts.
 
-<img src="https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/Banner.png?v=1702816959296">
+<img src="./assets/lcd6m_banner.jpg">
 
 </div>
 
