@@ -3,7 +3,9 @@ title:
 layout: layouts/page.njk
 ---
 
-<iframe id="haWidget" allowtransparency="true" scrolling="auto" data-class='loading' data-src="https://www.helloasso.com/associations/lcd6m/adhesions/adhesion-annuelle/widget" style="width: 100%; height: 750px; border: none;"></iframe>
+Pour nous rejoindre, rendez-vous sur HelloAsso
+
+<iframe id="haWidget" allowtransparency="false" scrolling="auto" src="https://www.helloasso.com/associations/lcd6m/adhesions/adhesion-annuelle/widget" style="width: 100%; height: 750px; border: none;"></iframe>
 
 <div class="note">
   
