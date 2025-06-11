@@ -494,12 +494,9 @@ ul.contact-list > li > i {
 	#navbar.responsive a {
 		display: block !important;
 	}
-}
 
-
-@media screen and (max-width: 500px) {
 	#footer .footer-links, .footer-block {
-		gap: 0.15rem;
+		gap: 0;
 	}
 
 	#footer .footer-block {
