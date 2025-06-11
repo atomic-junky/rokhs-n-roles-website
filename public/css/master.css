@@ -464,7 +464,9 @@ ul.contact-list > li > i {
 	}
 
 	#header a.header-link-join {
-		padding: 0;
+		justify-content: center;
+		align-items: center;
+		padding: 0 30px;
 	}
 
 	#header .join-container {
@@ -483,6 +485,8 @@ ul.contact-list > li > i {
 	#navbar a {
 		width: 100%;
 		display: none;
+		justify-content: center;
+		align-items: center;
 	}
 
 	#header .header-links a.active {
@@ -492,7 +496,7 @@ ul.contact-list > li > i {
 	}
 
 	#navbar.responsive a {
-		display: block !important;
+		display: flex !important;
 	}
 
 	#footer .footer-links, .footer-block {
