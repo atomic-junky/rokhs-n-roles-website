@@ -5,7 +5,7 @@ layout: layouts/page.njk
 
 Pour nous rejoindre, rendez-vous sur HelloAsso
 
-<iframe id="haWidget" allowtransparency="false" scrolling="auto" src="https://www.helloasso.com/associations/lcd6m/adhesions/adhesion-annuelle/widget" style="width: 100%; height: 750px; border: none;"></iframe>
+<iframe id="haWidget" class="helloasso-forms" allowtransparency="true" scrolling="auto" src="https://www.helloasso.com/associations/rokhs-roles/adhesions/migration-lcd6m-vers-rokhs-and-roles-bienvenue/widget" style="width: 100%; height: 820px; border: none;"></iframe>
 
 <div class="note">
   
@@ -23,7 +23,7 @@ Pour nous rejoindre, rendez-vous sur HelloAsso
   
 </div>
 
-Avant d'adhérer à la Confrérie, vous pouvez nous rejoindre gratuitement pendant quelques sessions.
+Avant d'adhérer à l'association, vous pouvez nous rejoindre gratuitement pendant quelques sessions.
 L’adhésion est ouverte aux mineurs à partir de 10 ans révolus.
 
 <div class="note">

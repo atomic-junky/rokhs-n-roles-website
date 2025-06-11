@@ -1,8 +1,8 @@
 module.exports = {
-	title: 'La Confrérie D6 Maîtres',
-	short_title: 'LCD6M',
+	title: 'Rokhs & Rôles',
+	short_title: 'Rokhs\'n\'Rôles',
 	description:
-		"La Confrérie D6 Maîtres : l'association Jeu de Rôle de Fontenay-sous-Bois",
+		"Rokhs & Rôles : l'association Jeu de Rôle de Fontenay-sous-Bois",
 	url: process.env.CONFIG_BASE_URL || 'http://localhost:8080/',
 	language: 'fr',
 	locale: 'Fr-fr',

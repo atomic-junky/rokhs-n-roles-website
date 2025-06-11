@@ -1,5 +1,5 @@
 {
-	"name": "lcd6m-website",
+	"name": "rokhs-n-roles-website",
 	"version": "0.1.0",
 	"description": "A simple blog, set up with Eleventy.",
 	"scripts": {
@@ -8,6 +8,7 @@
 		"format": "prettier --log-prelevel warn --write \"./**/*\""
 	},
 	"dependencies": {
+		"@11ty/eleventy-img": "^6.0.4",
 		"@11ty/eleventy-navigation": "^0.3.5",
 		"@11ty/eleventy-plugin-rss": "^1.2.0",
 		"@sanity/block-content-to-markdown": "^0.0.5",
