@@ -499,7 +499,7 @@ ul.contact-list > li > i {
 
 @media screen and (max-width: 500px) {
 	#footer .footer-links, .footer-block {
-		gap: 0.5rem;
+		gap: 0.15rem;
 	}
 
 	#footer .footer-block {
