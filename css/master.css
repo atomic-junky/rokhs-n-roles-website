@@ -254,7 +254,7 @@ body {
 	gap: 3rem;
 }
 
-.content > div {
+.content > div, div.blog-card {
 	background-color: var(--secondary-100);
 	padding: 3rem;
 	border-radius: 10px;
@@ -349,6 +349,7 @@ a {
 
 a.no-style {
 	border-bottom: none;
+	color: var(--text);
 }
 
 .footer > .links > a:hover {
@@ -369,50 +370,6 @@ a.no-style {
 }
 
 /* Global markdown style */
-.note {
-	font-family: Monocraft;
-	border-image: url('../assets/note-box-v2.png') round;
-	border-image-slice: 13 50 13 36 fill;
-	image-rendering: pixelated;
-	border-image-width: 52px 200px 52px 144px;
-	box-sizing: border-box;
-	padding: 70px 60px;
-	max-width: 760px;
-	width: auto;
-	color: black;
-	margin: 40px 10px;
-}
-
-.note:has(> h4) {
-	margin-top: 70px;
-}
-
-.note * {
-	font-size: 18px;
-	line-height: 10px;
-}
-
-.note p {
-	line-height: 1 !important;
-}
-
-.note > h4 {
-	font-family: Monocraft;
-	border-image: url('../assets/header-note-box-v2.png') round;
-	border-image-slice: 2 15 7 fill;
-	image-rendering: pixelated;
-	border-image-width: 8px 60px 28px;
-	box-sizing: border-box;
-	padding: 8px 60px 28px 60px;
-	width: fit-content;
-	margin: 0;
-	position: absolute;
-	transform: translateY(calc(-38px - 100%)) translateX(-30px);
-	font-size: 24px;
-	line-height: 26px;
-	color: black;
-}
-
 .primary-button {
 	padding: 0.5em 2em;
 	background-color: var(--primary);
@@ -423,6 +380,7 @@ a.no-style {
 	font-size: var(--p);
 	z-index: 2;
 	white-space: nowrap;
+	width: fit-content;
 }
 
 .secondary-button {
@@ -436,6 +394,7 @@ a.no-style {
 	cursor: pointer;
 	transition: transform ease 0.2s;
 	white-space: nowrap;
+	width: fit-content;
 }
 
 
@@ -602,12 +561,17 @@ a.no-style {
 	font-size: 30px;
 }
 
-.join-button::before {
+.join-button::before, .read-post-button::before {
 	content: "->";
 	font-family: Monocraft;
 	font-size: 1rem;
 	text-transform: uppercase;
 	margin: 0 0.5rem 0 0;
+	transition: ease 0.2s;
+}
+
+.join-button:hover::before, .read-post-button:hover::before {
+	margin: 0 0.25rem 0 0.25rem;
 }
 
 [data-theme="light"] .invert { filter: invert(0%); }

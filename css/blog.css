@@ -3,21 +3,13 @@
 	place-items: normal;
 }
 
-.controls {
-	margin: 3rem 0 2rem;
-}
-
 div.blog-card {
-	background-color: var(--static11);
-	padding: 2rem;
 	max-width: 760px !important;
 	width: auto;
-	margin: 0 10px 0 10px;
 	min-height: 128px;
 	width: 100%;
 	max-width: 760px;
 }
-
 .blog-card-container h3,
 .blog-card-container p {
 	margin: 0;
@@ -40,24 +32,11 @@ div.blog-card {
 
 .blog-card-title {
 	font-size: 1.5rem;
-	border-block-end: solid 3px var(--text);
 	width: fit-content;
-}
-
-.blog-card-title:after {
-	font-family: Monocraft;
-	content: "->";
-	margin: 0 0 0 10px;
-	transition: ease-in-out .25s;
-	transform: translateX(20px);
-}
-
-.blog-card-title:hover:after {
-	margin: 0 0 0 20px;
 }
 
 .blog-card-container {
 	display: flex;
 	flex-flow: column nowrap;
-	gap: 10px;
+	gap: 1rem;
 }
