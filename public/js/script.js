@@ -13,6 +13,10 @@ document.addEventListener(
 			if (linkHref == windowHref) {
 				link.classList.add('active')
 			}
+
+			if (windowHref.includes('/posts/') && linkHref.endsWith('/blog')) {
+				link.classList.add('active')
+			}
 		}
 	},
 	false

@@ -57,6 +57,11 @@ module.exports = function (eleventyConfig) {
 	// BrowserSync Configuration
 	eleventyConfig.setBrowserSyncConfig({ ghostMode: false })
 
+	eleventyConfig.setServerOptions({
+		module: "@11ty/eleventy-server-browsersync",
+		online: false,
+	});
+
 	// Filters
 	eleventyConfig.addFilter('htmlDateString', (dateObj) => {
 		return DateTime.fromISO(dateObj, { zone: 'utc' })
