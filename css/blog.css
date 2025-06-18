@@ -1,28 +1,21 @@
 /* Layout: Blog */
-.blog-card {
-	font-family: Monocraft;
-	border-image: url('../assets/blog-note-box.png') round;
-	border-image-slice: 18 14 14 15 fill;
-	image-rendering: pixelated;
-	border-image-width: 72px 56px 56px 60px;
-	box-sizing: border-box;
-	padding: 72px 56px 56px 60px;
-	max-width: 760px;
+.post {
+	place-items: normal;
+}
+
+.controls {
+	margin: 3rem 0 2rem;
+}
+
+div.blog-card {
+	background-color: var(--static11);
+	padding: 2rem;
+	max-width: 760px !important;
 	width: auto;
-	color: black;
 	margin: 0 10px 0 10px;
 	min-height: 128px;
 	width: 100%;
 	max-width: 760px;
-}
-
-.blog-links {
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	padding: 10px 0;
-	gap: 35px;
 }
 
 .blog-card-container h3,
@@ -30,14 +23,29 @@
 	margin: 0;
 }
 
-.blog-card-title {
+.blog-card-container img {
+	margin: 10px 0;
+}
+
+.blog-card-header {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.blog-card-header > span{
 	font-family: Monocraft;
+}
+
+.blog-card-title {
 	font-size: 1.5rem;
-	border-block-end: solid 4px #000;
+	border-block-end: solid 3px var(--text);
 	width: fit-content;
 }
 
 .blog-card-title:after {
+	font-family: Monocraft;
 	content: "->";
 	margin: 0 0 0 10px;
 	transition: ease-in-out .25s;
@@ -52,8 +60,4 @@
 	display: flex;
 	flex-flow: column nowrap;
 	gap: 10px;
-}
-
-.blog-card-date {
-	color: #00000080;
 }
