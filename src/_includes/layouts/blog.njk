@@ -6,25 +6,29 @@ templateClass: tmpl-home
 {{ content | safe }}
 
 {%- for post in posts -%}
-<div class="blog-card">
-	<div class="blog-card-container">
-		<div class="blog-card-header">
-			<a class="no-style" href="{{ post.url | toAbsoluteUrl }}">
-				<h3 class="blog-card-title">{{ post.data.title }}</h3>
-			</a>
-			<span> 
-				{# reversed post index #}
-				{% set index = posts | length - loop.index + 1 %}
-				#{{ index }}
-			</span>
+	<a class="no-style" href="{{ post.url | toAbsoluteUrl }}">
+		<div class="blog-card">
+			<div class="blog-card-container">
+				<div class="blog-card-header">
+					<h3 class="blog-card-title">{{ post.data.title }}</h3>
+					<span> 
+						{% set index = posts | length - loop.index + 1 %}
+						#{{ index }}
+					</span>
+				</div>
+
+				<p class="blog-card-date">{{ post.data.date | htmlDateString }}</p>
+
+				{% if post.data.previewImage %}
+					<img class="blog-card-image" src="{{ post.data.previewImage }}" />
+				{% endif %}
+
+				<div class="blog-card-content">
+					{{ post.data.previewContent }}
+				</div>
+				
+				<p class="secondary-button read-post-button" href="{{ post.url | toAbsoluteUrl }}">Lire le poste</p>
+			</div>
 		</div>
-		<p class="blog-card-date">{{ post.data.date | htmlDateString }}</p>
-		{% if post.data.previewImage %}
-		<img class="blog-card-image" src="{{ post.data.previewImage }}" />
-		{% endif %}
-		<div class="blog-card-content">
-			{{ post.data.previewContent }}
-		</div>
-	</div>
-</div>
+	</a>
 {%- endfor -%}

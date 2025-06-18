@@ -24,27 +24,27 @@
 />
 {%- endif -%} {# Favicon #}
 <link
-	rel="apple-touch-icon"
-	sizes="180x180"
-	href="{{ './assets/favicons/apple-touch-icon.png' | toAbsoluteUrl }}"
+	rel="icon"
+	type="image/png"
+	href="{{ './assets/favicons/favicon-96x96.png' | toAbsoluteUrl }}"
+	sizes="96x96"
 />
 <link
 	rel="icon"
-	type="image/png"
-	href="{{ './assets/favicons/favicon-32x32.png' | toAbsoluteUrl }}"
-	sizes="32x32"
-/>
-<link
-	rel="icon"
-	type="image/png"
-	href="{{ './assets/favicons/favicon-16x16.png' | toAbsoluteUrl }}"
-	sizes="16x16"
+	type="image/svg+xml"
+	href="{{ './assets/favicons/favicon.svg' | toAbsoluteUrl }}"
 />
 <link
 	rel="shortcut icon"
 	href="{{ './assets/favicons/favicon.ico' | toAbsoluteUrl }}"
 />
-<link rel="manifest" href="{{ './site.webmanifest' | toAbsoluteUrl }}" />
+<link
+	rel="apple-touch-icon"
+	sizes="180x180"
+	href="{{ './assets/favicons/apple-touch-icon.png' | toAbsoluteUrl }}"
+/>
+<meta name="apple-mobile-web-app-title" content="Rokhs&Rôles" />
+<link rel="manifest" href="/site.webmanifest" />
 {%- if meta.themeColor -%}
 <meta name="theme-color" content="{{ meta.themeColor }}" />
 {%- endif -%}
