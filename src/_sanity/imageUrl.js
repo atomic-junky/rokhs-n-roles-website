@@ -1,11 +1,10 @@
-const imageUrlBuilder = require('@sanity/image-url')
-const client = require('./client')
+import imageUrlBuilder from '@sanity/image-url'
+import client from './client.js'
 
 const builder = imageUrlBuilder(client)
 
-function urlFor(source) {
+export default function urlFor(source) {
 	if (!source) return null
 	return builder.image(source).url()
 }
 
-module.exports = urlFor

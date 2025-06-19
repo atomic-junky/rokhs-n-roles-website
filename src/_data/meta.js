@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	title: 'Rokhs & Rôles',
 	short_title: 'Rokhs\'n\'Rôles',
 	description:

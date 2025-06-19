@@ -1,9 +1,9 @@
-const toMarkdown = require('@sanity/block-content-to-markdown')
-const client = require('../_sanity/client')
-const urlFor = require('../_sanity/imageUrl')
+import toMarkdown from '@sanity/block-content-to-markdown'
+import client from '../_sanity/client.js'
+import urlFor from '../_sanity/imageUrl.js'
 
 // Function to fetch posts from Sanity
-module.exports = async function () {
+export default async function () {
 	const query = `*[_type == "post"]`
 	const posts = await client.fetch(query)
 
@@ -26,6 +26,7 @@ module.exports = async function () {
 					previewImage: urlFor(post.mainImage),
 					previewContent: createPreviewContent(content),
 					title: post.title,
+					tags: post.categories || [],
 					date: post.publishedAt
 				},
 				content: content

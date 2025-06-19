@@ -254,7 +254,7 @@ body {
 	gap: 3rem;
 }
 
-.content > div, div.blog-card {
+.content > div {
 	background-color: var(--secondary-100);
 	padding: 3rem;
 	border-radius: 10px;
@@ -576,10 +576,14 @@ a.no-style {
 
 [data-theme="light"] .invert { filter: invert(0%); }
 [data-theme="dark"] .invert { filter: invert(100%); }
-[data-theme="light"] img:not(.invert) { filter: invert(100%); }
-[data-theme="dark"] img:not(.invert) { filter: invert(0%); }
-
-.content img { filter: invert(0%) !important; }
+[data-theme="light"] #header img:not(.invert),
+[data-theme="light"] #footer img:not(.invert) {
+	filter: invert(100%);
+}
+[data-theme="dark"] #header img:not(.invert),
+[data-theme="dark"] #footer img:not(.invert) {
+	filter: invert(0%);
+}
 
 .list-unstyled {
 	list-style: none;

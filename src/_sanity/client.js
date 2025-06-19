@@ -1,5 +1,7 @@
-require('dotenv').config()
-const { createClient } = require('@sanity/client')
+import dotenv from 'dotenv'
+dotenv.config()
+
+import { createClient } from '@sanity/client'
 
 const projectId = process.env.SANITY_PROJECT_ID || ''
 const token = process.env.SANITY_API_TOKEN || ''
@@ -15,4 +17,4 @@ const client = createClient({
 	apiVersion
 })
 
-module.exports = client
+export default client

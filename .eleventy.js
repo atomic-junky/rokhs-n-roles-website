@@ -1,17 +1,18 @@
-const { DateTime } = require('luxon')
-const markdownIt = require('markdown-it')
-// const markdownItAnchor = require('markdown-it-anchor')
-const EleventyPluginNavigation = require('@11ty/eleventy-navigation')
-const EleventyPluginRss = require('@11ty/eleventy-plugin-rss')
-const faviconsPlugin = require('eleventy-plugin-gen-favicons')
-const { urlFor } = require('./src/_sanity/imageUrl.js')
+import { DateTime } from 'luxon'
+import markdownIt from 'markdown-it'
+// import markdownItAnchor from 'markdown-it-anchor'
+import EleventyPluginNavigation from '@11ty/eleventy-navigation'
+import EleventyPluginRss from '@11ty/eleventy-plugin-rss'
+import faviconsPlugin from 'eleventy-plugin-gen-favicons'
+import urlFor from './src/_sanity/imageUrl.js'
 
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 /**
  * Eleventy configuration
  */
-module.exports = function (eleventyConfig) {
+export default function (eleventyConfig) {
 	// Global data
 	eleventyConfig.addGlobalData('baseUrl', process.env.CONFIG_BASE_URL)
 
@@ -52,6 +53,10 @@ module.exports = function (eleventyConfig) {
 	// Passthrough Copy
 	eleventyConfig.addPassthroughCopy({
 		'./public/': '/'
+	})
+
+	eleventyConfig.addFilter('log', value => {
+		console.log(value)
 	})
 
 	// BrowserSync Configuration
