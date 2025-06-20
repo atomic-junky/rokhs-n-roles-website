@@ -1,0 +1,89 @@
+---
+import { sanityClient } from "sanity:client";
+import toMarkdown from '@sanity/block-content-to-markdown';
+import createPreviewContent from '../../utils/previewContent';
+import ImageUrlBuilder  from "@sanity/image-url";
+import Base from '../../layouts/Base.astro';
+import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
+
+const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
+
+const htmlDateString = (date: number) => new Date(date).toLocaleDateString('fr-FR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
+---
+
+<Base>
+<div class="blog-wrapper">
+	<div class="blog-container" id="blog-container">
+		{posts.map((post: any) => {
+			const content = toMarkdown(post.body)
+			const previewContent = createPreviewContent(content);
+
+
+			return (
+				<div class="blog-card">
+					{post.mainImage && (
+						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
+							<SanityPicture
+								src={post.mainImage}
+								sizes="(max-width: 600px), 600px"
+								img={{style: {objectFit: 'cover'}}}
+								class:list={"blog-card-image"}
+							/>
+						</a>
+					)}
+
+					<div class="blog-card-container">
+						{/* {post.slug.current && (
+							<div class="blog-card-author">
+								<img
+									class="blog-card-author-image"
+									src={post.data.authorImage}
+									alt={post.data.author}
+								/>
+								<span class="blog-card-author-name">{post.data.author}</span>
+							</div>
+						)} */}
+
+						{/* <div class="blog-card-header">
+							<h3 class="blog-card-title">{post.data.title}</h3>
+							<span>#{index}</span>
+						</div> */}
+
+						<p class="blog-card-date">{htmlDateString(post.publishedAt)}</p>
+
+						<div class="blog-card-content">
+							{previewContent}
+						</div>
+
+						<a class="secondary-button read-post-button" href={'/posts/' + post.slug.current}>
+							Lire le poste
+						</a>
+					</div>
+				</div>
+		)})}
+	<div class="blog-container-shadow"></div>
+
+	<script type="text/javascript" is:inline>
+		const scrollSpeed = 200;
+		const container = document.getElementById("blog-container");
+		container.style.scrollBehavior = "smooth";
+		container.addEventListener("wheel", function (e) {
+			if (e.deltaY > 0) {
+				container.scrollLeft += scrollSpeed;
+				e.preventDefault();
+			} else {
+				container.scrollLeft -= scrollSpeed;
+				e.preventDefault();
+			}
+		});
+	</script>
+</div>
+
+</Base>
+

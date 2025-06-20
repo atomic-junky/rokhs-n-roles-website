@@ -1,40 +1,33 @@
 {
-	"name": "rokhs-n-roles-website",
-	"version": "0.2.0",
-	"description": "A simple blog, set up with Eleventy.",
-	"scripts": {
-		"start": "eleventy --serve",
-		"build": "eleventy",
-		"format": "prettier --log-prelevel warn --write \"./**/*\""
-	},
-	"dependencies": {
-		"@11ty/eleventy-img": "^6.0.4",
-		"@11ty/eleventy-navigation": "^0.3.5",
-		"@11ty/eleventy-plugin-rss": "^1.2.0",
-		"@11ty/eleventy-server-browsersync": "^1.0.2",
-		"@sanity/block-content-to-markdown": "^0.0.5",
-		"@sanity/client": "^6.18.3",
-		"@sanity/image-url": "^1.0.2",
-		"dotenv": "^16.4.5",
-		"luxon": "^3.4.4",
-		"markdown-it": "^14.1.0",
-		"markdown-it-anchor": "^9.0.1"
-	},
-	"devDependencies": {
-		"@11ty/eleventy": "^3.1.0",
-		"eleventy-plugin-gen-favicons": "^1.1.2",
-		"prettier": "3.2.5"
-	},
-	"engines": {
-		"node": "18"
-	},
-	"repository": {
-		"url": "https://glitch.com/edit/#!/glitch-hello-eleventy"
-	},
-	"license": "MIT",
-	"keywords": [
-		"node",
-		"eleventy",
-		"vite"
-	]
+  "name": "rokhs-n-roles",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/rss": "^4.0.12",
+    "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/vercel": "^8.2.0",
+    "@astrojs/vue": "^5.1.0",
+    "@sanity/astro": "^3.2.6",
+    "@sanity/block-content-to-markdown": "^1.0.0",
+    "@sanity/client": "^6.29.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/react-is": "^19.0.0",
+    "astro": "^5.10.0",
+    "astro-sanity-picture": "^0.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-is": "^19.1.0",
+    "sanity": "^3.93.0",
+    "sharp": "^0.34.2",
+    "styled-components": "^6.1.19"
+  }
 }
