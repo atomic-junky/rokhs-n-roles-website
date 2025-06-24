@@ -31,3 +31,16 @@ import { SITE_TITLE } from '../consts';
 		</div>
 	</div>
 </header>
+
+<script is:inline>
+	function toggleMenu() {
+		var e = document.getElementById("navbar");
+		if (!e) return;
+
+		if (e.className === "header-links") {
+			e.className += " responsive";
+		} else {
+			e.className = "header-links";
+		}
+	}
+</script>

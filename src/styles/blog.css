@@ -89,3 +89,19 @@ div.blog-card {
 .read-post-button {
   margin-top: auto !important;
 }
+
+
+@media screen and (max-width: 750px) {
+	.blog-wrapper {
+		padding: 0 1rem;
+	}
+
+	.blog-container {
+		scroll-snap-type: x mandatory;
+	}
+
+	div.blog-card {
+		scroll-snap-align: start;
+		min-width: calc(100vw - 2rem) !important;
+	}
+}
