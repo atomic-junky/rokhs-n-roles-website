@@ -18,7 +18,7 @@
     "@sanity/astro": "^3.1.6",
     "@sanity/block-content-to-markdown": "^1.0.0",
     "@sanity/client": "^6.22.0",
-    "@sanity/vision": "3.92.0",
+    "@sanity/vision": "^3.95.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/react-is": "^19.0.0",
@@ -27,7 +27,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-is": "^19.1.0",
-    "sanity": "3.92.0",
+    "sanity": "^3.95.0",
     "sharp": "^0.34.2",
     "styled-components": "^6.1.19"
   }

@@ -17,8 +17,9 @@ const htmlDateString = (date: number) => new Date(date).toLocaleDateString('fr-F
 setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 ---
 
-<Base>
+<Base title="Blog">
 <div class="blog-wrapper">
+	<h2>Les derniers postes</h2>
 	<div class="blog-container" id="blog-container">
 		{posts.map((post: any) => {
 			const content = toMarkdown(post.body)

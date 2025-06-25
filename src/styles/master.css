@@ -205,27 +205,27 @@
 /* Import fonts */
 @font-face {
 	font-family: Lucida Sans;
-	src: url('https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/Lucida%20Sans.ttf?v=1702080180718')
+	src: url('/assets/fonts/Lucida Sans Regular.ttf')
 		format('truetype');
 }
 
 @font-face {
 	font-family: Lucida Sans;
 	font-weight: 600;
-	src: url('https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/lucidasansdemibold.ttf?v=1702080181408')
+	src: url('/assets/fonts/Lucida Sans Demibold.ttf')
 		format('truetype');
 }
 
 @font-face {
 	font-family: Lucida Sans;
 	font-weight: bold;
-	src: url('https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/LucidaSans-Bold.otf?v=1702080181017')
+	src: url('/assets/fonts/Lucida Sans Bold.otf')
 		format('opentype');
 }
 
 @font-face {
 	font-family: Monocraft;
-	src: url('https://cdn.glitch.global/4d8e3698-7f10-4664-b851-2c03e329d23a/Monocraft.ttf?v=1714240342061')
+	src: url('/assets/fonts/Monocraft.ttf')
 		format('truetype');
 }
 

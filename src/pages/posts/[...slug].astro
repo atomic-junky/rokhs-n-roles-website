@@ -6,23 +6,56 @@ import ImageUrlBuilder  from "@sanity/image-url";
 import Page from "../../layouts/Page.astro";
 import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 
-const { slug } = Astro.params;
-const posts = await sanityClient.fetch(`*[_type == "post"]{title, "slug": slug.current, publishedAt, body, mainImage, tags}`);
-const page = posts.find((post: any) => post.slug === slug);
-if (!page) return Astro.redirect("/404");
+var { slug } = (Astro.params ?? "")
+if (slug) slug.replaceAll('/', '');
 
-const { title, publishedAt, body, image } = page;
+const post = await sanityClient.fetch(`
+  *[_type == "post" && slug.current == "${slug}"]{
+    "currentPost": { 
+      "slug": slug.current, title, publishedAt, tags
+    },
+    "previousPost": *[_type == "post" && ^.publishedAt > publishedAt]|order(publishedAt desc)[0]{
+      "slug": slug.current,
+      "title": title
+    },
+    "nextPost": *[_type == "post" && ^.publishedAt < publishedAt]|order(publishedAt asc)[0]{
+      "slug": slug.current,
+      "title": title
+    }
+  }|order(publishedAt)[0]
+`);
+// if (!post) return Astro.redirect("/404");
+
+const { currentPost, previousPost, nextPost } = post;
 ---
 
-<Page>
-  <h1>{title}</h1>
-  <time datetime={new Date(publishedAt).toISOString()}>
+<Page title={currentPost.title}>
+  <h1>{currentPost.title}</h1>
+  <time datetime={new Date(currentPost.publishedAt).toISOString()}>
     {
-      new Date(publishedAt).toLocaleDateString("fr-FR", {
+      new Date(currentPost.publishedAt).toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "short",
         day: "numeric",
       })
     }
   </time>
+
+  <div class="controls">
+    {nextPost && (
+      <p>
+        <strong>Next post</strong>:
+        <a class="next" href={'/posts/' + nextPost.slug}>
+          { nextPost.title }
+        </a>
+      </p>
+    )}
+    {previousPost && (
+      <p>
+        <strong>Previous post</strong>:
+        <a class="previous" href={'/posts/' + previousPost.slug}>
+        { previousPost.title }</a>
+      </p>
+    )}
+  </div>
 </Page>

@@ -150,6 +150,7 @@ div.blog-card {
 
 	div.blog-card {
 		scroll-snap-align: start;
+		scroll-snap-stop: always;
 		min-width: calc(100vw - 2rem) !important;
 	}
 }
