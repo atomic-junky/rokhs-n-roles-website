@@ -1,0 +1,28 @@
+---
+import { sanityClient } from "sanity:client";
+import toMarkdown from '@sanity/block-content-to-markdown';
+import createPreviewContent from '../../utils/previewContent';
+import ImageUrlBuilder  from "@sanity/image-url";
+import Page from "../../layouts/Page.astro";
+import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
+
+const { slug } = Astro.params;
+const posts = await sanityClient.fetch(`*[_type == "post"]{title, "slug": slug.current, publishedAt, body, mainImage, tags}`);
+const page = posts.find((post: any) => post.slug === slug);
+if (!page) return Astro.redirect("/404");
+
+const { title, publishedAt, body, image } = page;
+---
+
+<Page>
+  <h1>{title}</h1>
+  <time datetime={new Date(publishedAt).toISOString()}>
+    {
+      new Date(publishedAt).toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    }
+  </time>
+</Page>

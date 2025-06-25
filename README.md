@@ -15,5 +15,5 @@ Step 1:
 
 Step 2:
 ```sh
-> npm start
+> npm run dev
 ```

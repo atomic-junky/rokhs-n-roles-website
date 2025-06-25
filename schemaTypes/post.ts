@@ -2,13 +2,14 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'post',
-  title: 'Post',
+  title: 'Article de blog',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Titre',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -18,35 +19,43 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
+      description: 'L\'url du poste. (e.g. https://rohks-n-roles.fr/post/<slug>)',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: {type: 'author'},
+      title: 'Auteur',
+      type: 'string',
+      options: {
+        layout: 'author'
+      },
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'mainImage',
-      title: 'Main image',
+      title: 'Image de couverture',
       type: 'image',
       options: {
         hotspot: true,
-      },
+      }
     }),
     defineField({
-      name: 'categories',
-      title: 'Categories',
+      name: 'tags',
+      title: 'Étiquettes',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}],
+      of: [{type: 'string'}],
+      options: {
+        layout: 'tags'
+      }
     }),
     defineField({
       name: 'publishedAt',
-      title: 'Published at',
+      title: 'Date de publication',
       type: 'datetime',
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Contenu',
       type: 'blockContent',
     }),
   ],
@@ -59,7 +68,7 @@ export default defineType({
     },
     prepare(selection) {
       const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
+      return {...selection, subtitle: author && `par ${author}`}
     },
   },
 })

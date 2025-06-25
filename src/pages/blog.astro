@@ -1,9 +1,9 @@
 ---
 import { sanityClient } from "sanity:client";
 import toMarkdown from '@sanity/block-content-to-markdown';
-import createPreviewContent from '../../utils/previewContent';
+import createPreviewContent from '../utils/previewContent';
 import ImageUrlBuilder  from "@sanity/image-url";
-import Base from '../../layouts/Base.astro';
+import Base from '../layouts/Base.astro';
 import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 
 const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
@@ -27,6 +27,13 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 
 			return (
 				<div class="blog-card">
+					<div class="image-overlay">
+						<p class="blog-card-date">{htmlDateString(post.publishedAt)}</p>
+						{/* <div class="blog-card-author">
+							<span class="blog-card-author-name">écrit par {post.author || "Personne"}</span>
+						</div> */}
+					</div>
+
 					{post.mainImage && (
 						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
 							<SanityPicture
@@ -38,24 +45,27 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 						</a>
 					)}
 
+					{!post.mainImage && (
+						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
+							<img
+								src={post.mainImage}
+								sizes="(max-width: 600px), 600px"
+								class:list={"blog-card-image"}
+							/>
+						</a>
+					)}
+
+
 					<div class="blog-card-container">
-						{/* {post.slug.current && (
-							<div class="blog-card-author">
-								<img
-									class="blog-card-author-image"
-									src={post.data.authorImage}
-									alt={post.data.author}
-								/>
-								<span class="blog-card-author-name">{post.data.author}</span>
+						{(post.tags && post.tags.length > 0) && (
+							<div class="blog-tag-container">
+								{post.tags && post.tags.map((tag: string) => (
+									<a class="blog-tag" href={`/tags/${tag}`}>
+										{tag}
+									</a>
+								))}
 							</div>
-						)} */}
-
-						{/* <div class="blog-card-header">
-							<h3 class="blog-card-title">{post.data.title}</h3>
-							<span>#{index}</span>
-						</div> */}
-
-						<p class="blog-card-date">{htmlDateString(post.publishedAt)}</p>
+						)}
 
 						<div class="blog-card-content">
 							{previewContent}
