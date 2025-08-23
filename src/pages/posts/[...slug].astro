@@ -1,31 +1,39 @@
 ---
-import { sanityClient } from "sanity:client";
-import toMarkdown from '@sanity/block-content-to-markdown';
-import createPreviewContent from '../../utils/previewContent';
-import ImageUrlBuilder  from "@sanity/image-url";
+// import { sanityClient } from "sanity:client";
+// import toMarkdown from '@sanity/block-content-to-markdown';
+// import createPreviewContent from '../../utils/previewContent';
+// import ImageUrlBuilder  from "@sanity/image-url";
 import Page from "../../layouts/Page.astro";
-import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
+import { loadQuery } from "../../lib/load-query";
+// import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 
 var { slug } = (Astro.params ?? "")
 if (slug) slug.replaceAll('/', '');
 
-const post = await sanityClient.fetch(`
-  *[_type == "post" && slug.current == "${slug}"]{
-    "currentPost": { 
-      "slug": slug.current, title, publishedAt, tags
-    },
-    "previousPost": *[_type == "post" && ^.publishedAt > publishedAt]|order(publishedAt desc)[0]{
-      "slug": slug.current,
-      "title": title
-    },
-    "nextPost": *[_type == "post" && ^.publishedAt < publishedAt]|order(publishedAt asc)[0]{
-      "slug": slug.current,
-      "title": title
-    }
-  }|order(publishedAt)[0]
-`);
-// if (!post) return Astro.redirect("/404");
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
 
+const { data: post } = await loadQuery({
+  query: `*[_type == "post" && slug.current == "${slug}"]{
+      "currentPost": { 
+        "slug": slug.current, title, publishedAt, tags
+      },
+      "previousPost": *[_type == "post" && ^.publishedAt > publishedAt]|order(publishedAt desc)[0]{
+        "slug": slug.current,
+        "title": title
+      },
+      "nextPost": *[_type == "post" && ^.publishedAt < publishedAt]|order(publishedAt asc)[0]{
+        "slug": slug.current,
+        "title": title
+      }
+    }|order(publishedAt)[0]
+  `,
+  params: {},
+  enabled,
+});
+
+// @ts-ignore
 const { currentPost, previousPost, nextPost } = post;
 ---
 

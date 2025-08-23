@@ -2,6 +2,26 @@
 import HeaderLink from './HeaderLink.astro';
 import JoinButton from './JoinButton.astro';
 import { SITE_TITLE } from '../consts';
+import { loadQuery } from "../lib/load-query";
+
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
+
+const { data: header } = await loadQuery({
+	query: `*[_type == "header"][0]{
+	links[]{
+		linkType,
+		slug,
+		title,
+		page->{
+			"slug": slug.current
+		}
+	}}`,
+	params: {},
+	enabled,
+});
+
 ---
 
 <header id="header">
@@ -14,10 +34,20 @@ import { SITE_TITLE } from '../consts';
 		</div>
 
 		<div class="header-links" id="navbar">
-			<HeaderLink href="/">Accueil</HeaderLink>
+			
+			{header?.links?.map((link: any) => {
+				const type = link.linkType
+				const pageTitle = link.title
+				const pageSlug = type === 'page'
+					? (link.page.slug === '/' ? '/' : `/${link.page.slug}`)
+					: `/${link.slug}`
+				
+				return <HeaderLink href={pageSlug}>{pageTitle}</HeaderLink>
+			})}
+			<!-- <HeaderLink href="/">Accueil</HeaderLink>
 			<HeaderLink href="/adhesion">Adhésion</HeaderLink>
 			<HeaderLink href="/infos">Infos</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href="/blog">Blog</HeaderLink> -->
 			<div class="header-link-join">
 				<JoinButton />
 			</div>

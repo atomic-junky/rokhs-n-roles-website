@@ -13,30 +13,36 @@ if (!projectId || !dataset) {
   );
 }
 
+// https://themer.sanity.build/
+// @ts-ignore
+import {theme} from 'https://themer.sanity.build/api/hues?default=c0bebd;300&primary=978071;700&transparent=bfbebe;600&positive=43d675;300&caution=fbd024;200&darkest=111'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import { presentationTool } from 'sanity/presentation'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 
-// import { loadEnv } from "vite";
-
-
-// const { SANITY_PROJECT_ID } = loadEnv(process.env.SANITY_PROJECT_ID ?? "", process.cwd(), "");
-// const { SANITY_DATASET } = loadEnv(process.env.SANITY_DATASET ?? "", process.cwd(), "");
-// const { SANITY_API_VERSION } = loadEnv(process.env.SANITY_API_VERSION ?? "", process.cwd(), "");
-// const { SANITY_USE_CDN } = loadEnv(process.env.SANITY_USE_CDN ?? "", process.cwd(), "");
-
 
 export default defineConfig({
-  name: 'default',
+  name: 'Rokhs_n_Roles',
   title: 'Rokhs & Rôles',
-
+  theme,
+  
   projectId,
   dataset,
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool(),
+    visionTool(),
+    // presentationTool({
+    //   previewUrl: {
+    //     initial: `${process.env.CONFIG_BASE_URL}?preview=true`,
+    //   },
+    // }),
+  ],
 
   schema: {
+    // @ts-ignore
     types: schemaTypes,
   },
 })

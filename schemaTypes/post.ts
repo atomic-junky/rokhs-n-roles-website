@@ -27,6 +27,7 @@ export default defineType({
       title: 'Auteur',
       type: 'string',
       options: {
+        // @ts-ignore
         layout: 'author'
       },
       validation: (Rule) => Rule.required(),
