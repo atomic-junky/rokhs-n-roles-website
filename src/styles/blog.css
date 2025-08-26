@@ -38,7 +38,7 @@
 div.blog-card {
 	position:relative;
 	min-width: 450px !important;
-	background-color: var(--secondary-100);
+	background-color: color-mix(in srgb, var(--secondary) 20%, transparent);
 	display: flex;
 	flex-flow: column nowrap;
 	border-radius: 10px;

@@ -43,6 +43,7 @@ export default defineType({
     defineField({
       name: 'tags',
       title: 'Étiquettes',
+      description: 'Entrez le nom de l\'étiquette et appuyez sur ENTRER pour l\'ajouter.',
       type: 'array',
       of: [{type: 'string'}],
       options: {
@@ -53,6 +54,11 @@ export default defineType({
       name: 'publishedAt',
       title: 'Date de publication',
       type: 'datetime',
+    }),
+    defineField({
+      name: 'preview',
+      title: 'Aperçu',
+      type: 'text',
     }),
     defineField({
       name: 'body',

@@ -1,11 +1,12 @@
 ---
 import { sanityClient } from "sanity:client";
 // @ts-ignore
-import toMarkdown from '@sanity/block-content-to-markdown';
-import createPreviewContent from '../utils/previewContent';
+// import toMarkdown from '@sanity/block-content-to-markdown';
+// import createPreviewContent from '../utils/previewContent';
 import ImageUrlBuilder  from "@sanity/image-url";
 import Base from '../layouts/Base.astro';
 import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
+import PortableText from '../components/CustomPortableText.astro';
 
 const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
 
@@ -23,8 +24,8 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 	<h2>Les derniers posts</h2>
 	<div class="blog-container" id="blog-container">
 		{posts.map((post: any) => {
-			const content = toMarkdown(post.body)
-			const previewContent = createPreviewContent(content);
+			// const content = toMarkdown(post.body)
+			// const previewContent = createPreviewContent(content);
 
 
 			return (
@@ -70,7 +71,8 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 						)}
 
 						<div class="blog-card-content">
-							{previewContent}
+							<h5>{post.title}</h5>
+							<PortableText value={post.preview} />
 						</div>
 
 						<a class="secondary-button read-post-button" href={'/posts/' + post.slug.current}>

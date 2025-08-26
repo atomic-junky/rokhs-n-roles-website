@@ -1,11 +1,7 @@
 ---
-// import { sanityClient } from "sanity:client";
-// import createPreviewContent from '../../utils/previewContent';
-// import ImageUrlBuilder  from "@sanity/image-url";
 import Page from "../../layouts/Page.astro";
 import { loadQuery } from "../../lib/load-query";
 import { PortableText } from '@portabletext/react';
-// import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 
 var { slug } = (Astro.params ?? "")
 if (slug) slug.replaceAll('/', '');
