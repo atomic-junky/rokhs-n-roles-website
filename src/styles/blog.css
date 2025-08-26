@@ -107,7 +107,7 @@ div.blog-card {
 
 .blog-tag {
 	display: inline-block;
-	background-color: var(--primary);
+	background-color: var(--secondary);
 	color: var(--background);
 	padding: 0.25rem 0.5rem;
 	border-radius: 5px;

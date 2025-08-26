@@ -32,45 +32,48 @@ const { data: post } = await loadQuery({
   params: {},
   enabled,
 });
-console.log(post.currentPost.body);
 
 // @ts-ignore
 const { currentPost, previousPost, nextPost } = post;
 ---
 
 <Page title={currentPost.title}>
-  <h1>{currentPost.title}</h1>
-  <time datetime={new Date(currentPost.publishedAt).toISOString()}>
-    {
-      new Date(currentPost.publishedAt).toLocaleDateString("fr-FR", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    }
-  </time>
+  <section>
+    <div class="post-header">
+      <h1>{currentPost.title}</h1>
+      <time datetime={new Date(currentPost.publishedAt).toISOString()}>
+        {
+          new Date(currentPost.publishedAt).toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        }
+      </time>
+    </div>
+  </section>
 
   <section>
     <div>
       <PortableText value={post.currentPost.body} />
     </div>
+    <div class="controls">
+      {nextPost && (
+        <p>
+          <strong>Post suivant</strong>:
+          <a class="next" href={'/posts/' + nextPost.slug}>
+            { nextPost.title }
+          </a>
+        </p>
+      )}
+      {previousPost && (
+        <p>
+          <strong>Post précédent</strong>:
+          <a class="previous" href={'/posts/' + previousPost.slug}>
+          { previousPost.title }</a>
+        </p>
+      )}
+    </div>
   </section>
 
-  <div class="controls">
-    {nextPost && (
-      <p>
-        <strong>Next post</strong>:
-        <a class="next" href={'/posts/' + nextPost.slug}>
-          { nextPost.title }
-        </a>
-      </p>
-    )}
-    {previousPost && (
-      <p>
-        <strong>Previous post</strong>:
-        <a class="previous" href={'/posts/' + previousPost.slug}>
-        { previousPost.title }</a>
-      </p>
-    )}
-  </div>
 </Page>
