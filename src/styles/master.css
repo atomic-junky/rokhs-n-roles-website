@@ -597,6 +597,11 @@ ul.contact-list > li > i {
 		background-color: transparent;
 	}
 
+	#header .header-links {
+		transform: none;
+		align-items: start;
+	}
+
 	#header .header-link-join {
 		justify-content: center;
 		align-items: center;

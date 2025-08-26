@@ -1,10 +1,10 @@
 ---
 // import { sanityClient } from "sanity:client";
-// import toMarkdown from '@sanity/block-content-to-markdown';
 // import createPreviewContent from '../../utils/previewContent';
 // import ImageUrlBuilder  from "@sanity/image-url";
 import Page from "../../layouts/Page.astro";
 import { loadQuery } from "../../lib/load-query";
+import { PortableText } from '@portabletext/react';
 // import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 
 var { slug } = (Astro.params ?? "")
@@ -17,7 +17,7 @@ if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
 const { data: post } = await loadQuery({
   query: `*[_type == "post" && slug.current == "${slug}"]{
       "currentPost": { 
-        "slug": slug.current, title, publishedAt, tags
+        "slug": slug.current, title, publishedAt, tags, body
       },
       "previousPost": *[_type == "post" && ^.publishedAt > publishedAt]|order(publishedAt desc)[0]{
         "slug": slug.current,
@@ -32,6 +32,7 @@ const { data: post } = await loadQuery({
   params: {},
   enabled,
 });
+console.log(post.currentPost.body);
 
 // @ts-ignore
 const { currentPost, previousPost, nextPost } = post;
@@ -48,6 +49,12 @@ const { currentPost, previousPost, nextPost } = post;
       })
     }
   </time>
+
+  <section>
+    <div>
+      <PortableText value={post.currentPost.body} />
+    </div>
+  </section>
 
   <div class="controls">
     {nextPost && (

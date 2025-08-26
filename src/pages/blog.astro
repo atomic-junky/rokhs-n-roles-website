@@ -20,7 +20,7 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 
 <Base title="Blog">
 <div class="blog-wrapper">
-	<h2>Les derniers postes</h2>
+	<h2>Les derniers posts</h2>
 	<div class="blog-container" id="blog-container">
 		{posts.map((post: any) => {
 			const content = toMarkdown(post.body)
@@ -50,7 +50,7 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 					{!post.mainImage && (
 						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
 							<img
-								src={post.mainImage}
+								src="./assets/rnr_blog_placeholder.png"
 								sizes="(max-width: 600px), 600px"
 								class:list={"blog-card-image"}
 							/>

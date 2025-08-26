@@ -108,7 +108,7 @@ div.blog-card {
 .blog-tag {
 	display: inline-block;
 	background-color: var(--primary);
-	color: var(--text-100);
+	color: var(--background);
 	padding: 0.25rem 0.5rem;
 	border-radius: 5px;
 	font-size: 0.875rem;
