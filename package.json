@@ -26,7 +26,6 @@
     "@types/react-dom": "^19.1.6",
     "@types/react-is": "^19.0.0",
     "astro": "^5.1.1",
-    "astro-sanity-picture": "^0.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-is": "^19.1.0",

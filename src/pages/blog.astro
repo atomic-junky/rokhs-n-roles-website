@@ -5,8 +5,8 @@ import { sanityClient } from "sanity:client";
 // import createPreviewContent from '../utils/previewContent';
 import ImageUrlBuilder  from "@sanity/image-url";
 import Base from '../layouts/Base.astro';
-import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
 import PortableText from '../components/SanityPortableText.astro';
+import { getSanityImageURL } from "../utils/helpers";
 
 const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
 
@@ -15,8 +15,6 @@ const htmlDateString = (date: number) => new Date(date).toLocaleDateString('fr-F
   month: 'long',
   day: 'numeric',
 });
-
-setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 ---
 
 <Base title="Blog">
@@ -32,31 +30,15 @@ setSanityPictureDefaults({imageUrlBuilder: ImageUrlBuilder(sanityClient)});
 				<div class="blog-card">
 					<div class="image-overlay">
 						<p class="blog-card-date">{htmlDateString(post.publishedAt)}</p>
-						{/* <div class="blog-card-author">
-							<span class="blog-card-author-name">écrit par {post.author || "Personne"}</span>
-						</div> */}
 					</div>
 
-					{post.mainImage && (
-						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
-							<SanityPicture
-								src={post.mainImage}
-								sizes="(max-width: 600px), 600px"
-								img={{style: {objectFit: 'cover'}}}
-								class:list={"blog-card-image"}
-							/>
-						</a>
-					)}
-
-					{!post.mainImage && (
-						<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
-							<img
-								src="./assets/rnr_blog_placeholder.png"
-								sizes="(max-width: 600px), 600px"
-								class:list={"blog-card-image"}
-							/>
-						</a>
-					)}
+					<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
+						<img
+							src={post.mainImage ? getSanityImageURL(post.mainImage.asset).url() : "./assets/rnr_blog_placeholder.png"}
+							sizes="(max-width: 600px), 600px"
+							class:list={"blog-card-image"}
+						/>
+					</a>
 
 
 					<div class="blog-card-container">
