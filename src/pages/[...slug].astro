@@ -1,7 +1,7 @@
 ---
 import Page from '../layouts/Page.astro';
 import { loadQuery } from "../lib/load-query";
-import PortableText from '../components/CustomPortableText.astro';
+import PortableText from '../components/SanityPortableText.astro';
 
 var { slug } = (Astro.params ?? "")
 if (slug) slug.replaceAll('/', '');

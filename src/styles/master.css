@@ -528,6 +528,13 @@ ul.contact-list > li > i {
 	flex-direction: column;
 }
 
+.content-image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
 @media screen and (max-width: 975px) {
 	.content {
 		width: 100%;

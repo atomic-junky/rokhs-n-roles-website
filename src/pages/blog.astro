@@ -6,7 +6,7 @@ import { sanityClient } from "sanity:client";
 import ImageUrlBuilder  from "@sanity/image-url";
 import Base from '../layouts/Base.astro';
 import SanityPicture, {setSanityPictureDefaults} from "astro-sanity-picture";
-import PortableText from '../components/CustomPortableText.astro';
+import PortableText from '../components/SanityPortableText.astro';
 
 const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
 
