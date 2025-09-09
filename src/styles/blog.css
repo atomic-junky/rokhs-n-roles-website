@@ -1,4 +1,9 @@
 /* Layout: Blog */
+.content {
+	min-height: 100%;
+	flex:1
+}
+
 .blog-wrapper {
 	display: flex;
 	flex-flow: column nowrap;
@@ -136,6 +141,42 @@ div.blog-card {
 	border-radius: 5px;
 	font-size: 0.875rem;
 	margin: 0;
+}
+
+.blog-title-section {
+	position: relative;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+	background-image: var(--blogImageUrl);
+}
+
+.blog-title-section::before {
+	content: "";
+	position: absolute;
+	top: 0; left: 0;
+	bottom: 0; right: 0;
+	/* backdrop-filter: grayscale(100%); */
+	background-color: #fff;
+	filter: opacity(0.5);
+}
+
+.blog-title-section > * {
+	z-index: 1;
+}
+
+.blog-content-section {
+	height: 100%;
+	flex:1;
+}
+
+.blog-control-button-next {
+	left: 100%;
+	margin-left: auto;
+}
+
+.controls {
+	display: flex;
 }
 
 
