@@ -1,0 +1,28 @@
+---
+import Page from '../layouts/Page.astro';
+import { loadQuery } from "../lib/load-query";
+import PortableText from '../components/SanityPortableText.astro';
+
+var { slug } = (Astro.params ?? "")
+if (slug) slug.replaceAll('/', '');
+
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
+
+const { data: post } = await loadQuery({
+  query: `*[_type == "page" && slug.current == "${slug}"][0]`,
+  params: {},
+  enabled,
+});
+---
+
+<Page title=post.title>
+    {post?.sections?.map((section: any) => (
+        <section>
+            <div>
+                <PortableText value={section.content} />
+            </div>
+        </section>
+    ))}
+</Page>

@@ -1,0 +1,85 @@
+---
+import { sanityClient } from "sanity:client";
+// @ts-ignore
+// import toMarkdown from '@sanity/block-content-to-markdown';
+// import createPreviewContent from '../utils/previewContent';
+import ImageUrlBuilder  from "@sanity/image-url";
+import Base from '../layouts/Base.astro';
+import PortableText from '../components/SanityPortableText.astro';
+import { getSanityImageURL } from "../utils/helpers";
+
+const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)`);
+
+const htmlDateString = (date: number) => new Date(date).toLocaleDateString('fr-FR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Base title="Blog">
+<div class="blog-wrapper">
+	<h2>Les derniers posts</h2>
+	<div class="blog-container" id="blog-container">
+		{posts.map((post: any) => {
+			// const content = toMarkdown(post.body)
+			// const previewContent = createPreviewContent(content);
+
+
+			return (
+				<div class="blog-card">
+					<div class="image-overlay">
+						<p class="blog-card-date">{htmlDateString(post.publishedAt)}</p>
+					</div>
+
+					<a class="no-style blog-card-image-container" href={'/posts/' + post.slug.current}>
+						<img
+							src={post.mainImage ? getSanityImageURL(post.mainImage.asset).url() : "./assets/rnr_blog_placeholder.png"}
+							sizes="(max-width: 600px), 600px"
+							class:list={"blog-card-image"}
+						/>
+					</a>
+
+
+					<div class="blog-card-container">
+						{(post.tags && post.tags.length > 0) && (
+							<div class="blog-tag-container">
+								{post.tags && post.tags.map((tag: string) => (
+									<a class="blog-tag" href={`/tags/${tag}`}>
+										{tag}
+									</a>
+								))}
+							</div>
+						)}
+
+						<div class="blog-card-content">
+							<h5>{post.title}</h5>
+							<PortableText value={post.preview} />
+						</div>
+
+						<a class="secondary-button read-post-button" href={'/posts/' + post.slug.current}>
+							Lire le poste
+						</a>
+					</div>
+				</div>
+		)})}
+	<div class="blog-container-shadow"></div>
+
+	<script type="text/javascript" is:inline>
+		const scrollSpeed = 200;
+		const container = document.getElementById("blog-container");
+		container.style.scrollBehavior = "smooth";
+		container.addEventListener("wheel", function (e) {
+			if (e.deltaY > 0) {
+				container.scrollLeft += scrollSpeed;
+				e.preventDefault();
+			} else {
+				container.scrollLeft -= scrollSpeed;
+				e.preventDefault();
+			}
+		});
+	</script>
+</div>
+
+</Base>
+

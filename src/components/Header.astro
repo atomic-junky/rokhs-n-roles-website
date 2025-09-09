@@ -1,0 +1,76 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import JoinButton from './JoinButton.astro';
+import { SITE_TITLE } from '../consts';
+import { loadQuery } from "../lib/load-query";
+
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
+
+const { data: header } = await loadQuery({
+	query: `*[_type == "header"][0]{
+	links[]{
+		linkType,
+		slug,
+		title,
+		page->{
+			"slug": slug.current
+		}
+	}}`,
+	params: {},
+	enabled,
+});
+
+---
+
+<header id="header">
+	<div class="header-content" id="menu">
+		<div class="title-container header-left">
+		<a class="title-link" href="/">
+			<img class="header-img" src="/assets/rnr_logo.svg" alt="">
+			<span class="title-label">{SITE_TITLE}</span>
+		</a>
+		</div>
+
+		<div class="header-links" id="navbar">
+			
+			{header?.links?.map((link: any) => {
+				const type = link.linkType
+				const pageTitle = link.title
+				const pageSlug = type === 'page'
+					? (link.page.slug === '/' ? '/' : `/${link.page.slug}`)
+					: `/${link.slug}`
+				
+				return <HeaderLink href={pageSlug}>{pageTitle}</HeaderLink>
+			})}
+			<!-- <HeaderLink href="/">Accueil</HeaderLink>
+			<HeaderLink href="/adhesion">Adhésion</HeaderLink>
+			<HeaderLink href="/infos">Infos</HeaderLink>
+			<HeaderLink href="/blog">Blog</HeaderLink> -->
+			<div class="header-link-join">
+				<JoinButton />
+			</div>
+			<a href="javascript:void(0);" class="menu-icon" onclick="toggleMenu()">
+				<i class="fi iconoir-menu"></i>
+			</a>
+		</div>
+
+		<div class="join-container header-right">
+			<JoinButton />
+		</div>
+	</div>
+</header>
+
+<script is:inline>
+	function toggleMenu() {
+		var e = document.getElementById("navbar");
+		if (!e) return;
+
+		if (e.className === "header-links") {
+			e.className += " responsive";
+		} else {
+			e.className = "header-links";
+		}
+	}
+</script>

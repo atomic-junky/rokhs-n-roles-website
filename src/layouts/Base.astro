@@ -1,0 +1,54 @@
+---
+import {VisualEditing} from '@sanity/astro/visual-editing'
+import { ClientRouter } from "astro:transitions";
+import { SITE_TITLE } from '../consts';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+import '../styles/master.css';
+import '../styles/blog.css';
+
+const {title, description} = Astro.props;
+const pageTitle = title ? SITE_TITLE + " | " + title : SITE_TITLE;
+const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED == 'true'
+---
+
+<html data-theme="light" lang="fr">
+	<head>
+		<BaseHead title={pageTitle} description={description} />
+   		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css"/>
+		<meta name="viewport" content="width=device-width" />
+    	<meta name="generator" content={Astro.generator} />
+		<ClientRouter />
+	</head>
+	<body>
+		<Header />
+		<main>
+            <slot />
+			<VisualEditing enabled={visualEditingEnabled} zIndex={9999}/>
+		</main>
+		<Footer />
+	
+		<script>
+			// Function to append preview parameter to URLs
+			function appendPreviewToLinks() {
+				const links = document.querySelectorAll('a')
+				const urlParams = new URLSearchParams(window.location.search)
+				if (urlParams.has('preview')) {
+					links.forEach((link) => {
+						const url = new URL(link.href)
+						url.searchParams.set('preview', 'true')
+						link.href = url.toString()
+					})
+				}
+			}
+
+			// Call the function to update links after the page loads
+			if (typeof window !== 'undefined') {
+				window.addEventListener('load', appendPreviewToLinks)
+			}
+		</script>
+
+	</body>
+</html>

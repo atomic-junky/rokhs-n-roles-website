@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadQuery } from "../lib/load-query";
+import { PortableText } from '@portabletext/react';
+
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
+
+const { data: post } = await loadQuery({
+  query: `*[_type == "page" && slug.current == "/"][0]`,
+  params: {},
+  enabled,
+});
+
+---
+<Base title="" description="">
+    <div class="wrapper banner-wrapper">
+        <img src="./assets/rnr_banner.jpg" class="banner-img" />
+        <div class="banner-hover">
+            <div class="banner-title-container">
+                <h1 class="banner-title">Rokhs & Rôles</h1>
+                <h1 class="banner-subtitle">Des jeux et des rôles</h1>
+            </div>
+        </div>
+        <div class="content">
+             {post?.sections?.map((section: any) => (
+                <section>
+                    <div>
+                      <PortableText value={section.content} />
+                    </div>
+                </section>
+            ))}
+            <section>
+                <div>
+                    <div>
+                        <p>Le lieu de rendez-vous de l'association se situe a la <strong>Maison du Citoyen et de la Vie
+                                Associative</strong> de <strong>Fontenay-sous-bois</strong>.</p>
+                    </div>
+    
+                    <div style="width: 100%">
+                        <iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                            src="https://maps.google.com/maps?width=100%25&amp;height=400&amp;hl=en&amp;q=Maison%20du%20citoyen%20et%20de%20la%20vie%20associative+(La%20Confrérie%20D6%20Maîtres)&amp;t=p&amp;z=17&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                        </iframe>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</Base>

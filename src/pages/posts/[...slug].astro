@@ -1,0 +1,82 @@
+---
+import Page from "../../layouts/Page.astro";
+import { loadQuery } from "../../lib/load-query";
+import { PortableText } from '@portabletext/react';
+import { getSanityImageURL } from "../../utils/helpers";
+
+var { slug } = (Astro.params ?? "")
+if (slug) slug.replaceAll('/', '');
+
+let enabled
+const referrer = Astro.url.href
+if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
+
+const { data: post } = await loadQuery({
+  query: `*[_type == "post" && slug.current == "${slug}"][0]{
+    "currentPost": { 
+      "slug": slug.current, 
+      title, 
+      publishedAt, 
+      tags, 
+      body, 
+      mainImage
+    },
+    "previousPost": *[_type == "post" && publishedAt < ^.publishedAt]
+      | order(publishedAt desc)[0]{ "slug": slug.current, title },
+    "nextPost": *[_type == "post" && publishedAt > ^.publishedAt]
+      | order(publishedAt asc)[0]{ "slug": slug.current, title }
+  }`,
+  params: {},
+  enabled,
+});
+
+if (!post) {
+  return new Response(null, {
+    status: 404,
+    statusText: 'Not found'
+  });
+}
+
+// @ts-ignore
+const { currentPost, previousPost, nextPost } = post;
+const blogImageUrl = `url("${currentPost.mainImage ? getSanityImageURL(currentPost.mainImage.asset).url() : "./assets/rnr_blog_placeholder.png"}")`
+---
+
+<style define:vars={{blogImageUrl}}></style>
+
+<Page title={currentPost.title}>
+  <section class="blog-title-section">
+    <div class="post-header">
+      <h1>{currentPost.title}</h1>
+      <time datetime={new Date(currentPost.publishedAt).toISOString()}>
+        {
+          new Date(currentPost.publishedAt).toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        }
+      </time>
+    </div>
+  </section>
+
+  <section class="blog-content-section">
+    <div>
+      <PortableText value={post.currentPost.body} />
+    </div>
+    <div class="controls">
+      {nextPost && (
+        <a class="primary-button" href={'/posts/' + nextPost.slug}>
+          Post suivant
+        </a>
+      )}
+      {previousPost && (
+        <a class="primary-button blog-control-button-next" href={'/posts/' + previousPost.slug}>
+          Post précédent
+        </a>
+
+      )}
+    </div>
+  </section>
+</Page>
+
