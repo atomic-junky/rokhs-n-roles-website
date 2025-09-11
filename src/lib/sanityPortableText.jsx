@@ -1,4 +1,4 @@
-import { Image } from 'astro:assets';
+import { Image } from "astro:assets";
 import { getSanityImageURL } from '../utils/helpers.js';
 
 export const imageType = ({ value }) => {
