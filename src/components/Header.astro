@@ -1,8 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+
 import HeaderLink from './HeaderLink.astro';
 import JoinButton from './JoinButton.astro';
 import { SITE_TITLE } from '../consts';
 import { loadQuery } from "../lib/load-query";
+
+import logo from '../assets/rnr_logo.svg';
 
 let enabled
 const referrer = Astro.url.href
@@ -28,7 +32,7 @@ const { data: header } = await loadQuery({
 	<div class="header-content" id="menu">
 		<div class="title-container header-left">
 		<a class="title-link" href="/">
-			<img class="header-img" src="/assets/rnr_logo.svg" alt="">
+			<Image class="header-img" src={logo} alt="Logo de Rokhs & Rôles" />
 			<span class="title-label">{SITE_TITLE}</span>
 		</a>
 		</div>

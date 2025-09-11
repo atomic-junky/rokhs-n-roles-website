@@ -1,3 +1,10 @@
+---
+import { Image } from 'astro:assets';
+import logoHelloasso from '../assets/logo_helloasso.svg';
+import logoFontenay from '../assets/logo_fontenay.svg';
+---
+
+
 <footer id="footer">
 	<div class="footer-links">
 		<div class="footer-block">
@@ -8,10 +15,10 @@
 			<i class="fi iconoir-github"></i>
 		</a>
 		<a href="https://www.helloasso.com/associations/rokhs-roles">
-			<img height="50px" src="/assets/logo_helloasso.svg">
+			<Image src={logoHelloasso} alt="Logo de Helloasso" height={50} />
 		</a>
 		<a href="https://www.fontenay.fr/citoyennete-vie-associative/vie-associative/annuaire-des-associations-256/rokhs-roles-6977.html">
-			<img class="invert" height="50px" src="/assets/logo_fontenay.svg">
+			<Image class="invert" src={logoFontenay} alt="Logo de la ville de Fontenay" height={50} />
 		</a>
 		</div>
 		

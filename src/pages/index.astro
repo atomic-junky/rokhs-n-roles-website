@@ -1,7 +1,11 @@
 ---
+import { Image } from 'astro:assets';
+import { PortableText } from '@portabletext/react';
+
 import Base from '../layouts/Base.astro';
 import { loadQuery } from "../lib/load-query";
-import { PortableText } from '@portabletext/react';
+
+import banner from '../assets/rnr_banner.jpg';
 
 let enabled
 const referrer = Astro.url.href
@@ -16,7 +20,7 @@ const { data: post } = await loadQuery({
 ---
 <Base title="" description="">
     <div class="wrapper banner-wrapper">
-        <img src="./assets/rnr_banner.jpg" class="banner-img" />
+        <Image class="banner-img" src={banner} alt="Bannière de Rokhs & Rôles" />
         <div class="banner-hover">
             <div class="banner-title-container">
                 <h1 class="banner-title">Rokhs & Rôles</h1>
