@@ -32,7 +32,7 @@ const { data: header } = await loadQuery({
 	<div class="header-content" id="menu">
 		<div class="title-container header-left">
 		<a class="title-link" href="/">
-			<Image class="header-img" src={logo} alt="Logo de Rokhs & Rôles" />
+			<Image class="header-img" src={logo} alt="Logo de Rokhs & Rôles" height={35} />
 			<span class="title-label">{SITE_TITLE}</span>
 		</a>
 		</div>
@@ -48,10 +48,6 @@ const { data: header } = await loadQuery({
 				
 				return <HeaderLink href={pageSlug}>{pageTitle}</HeaderLink>
 			})}
-			<!-- <HeaderLink href="/">Accueil</HeaderLink>
-			<HeaderLink href="/adhesion">Adhésion</HeaderLink>
-			<HeaderLink href="/infos">Infos</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink> -->
 			<div class="header-link-join">
 				<JoinButton />
 			</div>

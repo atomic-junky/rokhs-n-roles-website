@@ -292,9 +292,8 @@ a.no-style {
 }
 
 #header .header-img {
-	width: 30px;
-	max-width: 100%;
-	height: auto;
+	max-height: 30px;
+	width: auto;
 	cursor: pointer;
 }
 

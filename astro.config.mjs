@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import sanity from '@sanity/astro';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
+import { imageService } from "@unpic/astro/service";
 
 import { loadEnv } from "vite";
 
@@ -21,6 +22,12 @@ export default defineConfig({
       }),
       react()
   ],
+  image: {
+    service: imageService({
+      placeholder: "blurhash",
+      layout: "constrained",
+    }),
+  },
   output: 'server',
   adapter: netlify(),
 });
