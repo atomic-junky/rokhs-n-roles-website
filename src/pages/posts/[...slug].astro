@@ -3,6 +3,7 @@ import Page from "../../layouts/Page.astro";
 import { loadQuery } from "../../lib/load-query";
 import { PortableText } from '@portabletext/react';
 import { getSanityImageURL } from "../../utils/helpers";
+import { Pagination } from 'accessible-astro-components'
 
 var { slug } = (Astro.params ?? "")
 if (slug) slug.replaceAll('/', '');
@@ -12,23 +13,33 @@ const referrer = Astro.url.href
 if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
 
 const { data: post } = await loadQuery({
-  query: `*[_type == "post" && slug.current == "${slug}"][0]{
-    "currentPost": { 
-      "slug": slug.current, 
-      title, 
-      publishedAt, 
-      tags, 
-      body, 
-      mainImage
-    },
-    "previousPost": *[_type == "post" && publishedAt < ^.publishedAt]
-      | order(publishedAt desc)[0]{ "slug": slug.current, title },
-    "nextPost": *[_type == "post" && publishedAt > ^.publishedAt]
-      | order(publishedAt asc)[0]{ "slug": slug.current, title }
-  }`,
+  query: `
+    *[_type == "post" && slug.current == "${slug}"][0]{
+      "postCount": count(*[_type == "post"]),
+      "currentPost": {
+        "index": count(*[_type == "post" && publishedAt > ^.publishedAt]),
+        "slug": slug.current, 
+        title, 
+        publishedAt, 
+        tags, 
+        body, 
+        mainImage
+      },
+      "firstPost": *[_type == "post"]
+        | order(publishedAt desc)[0]{ "slug": slug.current, title },
+      "nextPost": *[_type == "post" && publishedAt < ^.publishedAt]
+        | order(publishedAt desc)[0]{ "slug": slug.current, title },
+      "previousPost": *[_type == "post" && publishedAt > ^.publishedAt]
+        | order(publishedAt asc)[0]{ "slug": slug.current, title },
+      "lastPost": *[_type == "post"]
+        | order(publishedAt asc)[0]{ "slug": slug.current, title }
+    }
+  `,
   params: {},
   enabled,
 });
+
+console.log(post)
 
 if (!post) {
   return new Response(null, {
@@ -37,8 +48,9 @@ if (!post) {
   });
 }
 
+
 // @ts-ignore
-const { currentPost, previousPost, nextPost } = post;
+const { postCount, currentPost, firstPost, previousPost, nextPost, lastPost } = post;
 const blogImageUrl = `url("${currentPost.mainImage ? getSanityImageURL(currentPost.mainImage.asset).url() : "./assets/rnr_blog_placeholder.png"}")`
 ---
 
@@ -65,18 +77,30 @@ const blogImageUrl = `url("${currentPost.mainImage ? getSanityImageURL(currentPo
       <PortableText value={post.currentPost.body} />
     </div>
     <div class="controls">
-      {nextPost && (
-        <a class="primary-button" href={'/posts/' + nextPost.slug}>
-          Post suivant
-        </a>
-      )}
-      {previousPost && (
-        <a class="primary-button blog-control-button-next" href={'/posts/' + previousPost.slug}>
-          Post précédent
-        </a>
-
-      )}
+      <Pagination
+        firstPage={'/posts/' + firstPost.slug}
+        previousPage={previousPost ? '/posts/' + previousPost.slug : ''}
+        nextPage={nextPost ? '/posts/' + nextPost.slug : ''}
+        lastPage={'/posts/' + lastPost.slug}
+        currentPage={post.currentPost.index + 1}
+        totalPages={postCount}
+        ariaLabel="Blog navigation"
+      />
     </div>
   </section>
 </Page>
 
+<style is:global>
+  .pagination a {
+    border-color: #fff;
+  }
+
+  .pagination a:hover {
+    background-color: #fff;
+    box-shadow: none !important;
+  }
+
+  .pagination a:hover svg {
+    color: var(--secondary);
+  }
+</style>

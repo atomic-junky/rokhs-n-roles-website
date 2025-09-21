@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import purgecss from 'astro-purgecss';
 import sanity from '@sanity/astro';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
@@ -20,7 +21,13 @@ export default defineConfig({
       useCdn: SANITY_USE_CDN || false,
       studioBasePath: '/admin',   
       }),
-      react()
+      purgecss({
+        fontFace: true,
+        keyframes: true,
+        safelist: ['random', 'yep', 'button', /^nav-/],
+        blocklist: ['usedClass', /^nav-/]
+      }),
+      react(),
   ],
   image: {
     service: imageService({
