@@ -15,6 +15,14 @@ const { data: post } = await loadQuery({
   params: {},
   enabled,
 });
+
+if (!post) {
+    Astro.response.status = 404;
+    return new Response(null, {
+    status: 404,
+    statusText: 'Not found'
+  });
+}
 ---
 
 <Page title=post.title>

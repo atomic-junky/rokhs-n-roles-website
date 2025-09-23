@@ -1,0 +1,53 @@
+---
+import { Card, Badge } from 'accessible-astro-components'
+
+const {url, title, image, imageUrl, tags, text} = Astro.props;
+const ariaProperties = {
+    "width": 480,
+    "height": 270,
+    "url": url,
+    "title": title,
+    "fullHeight": true,
+    "class": "card",
+    ...(imageUrl != undefined && { "img": imageUrl }),
+    ...(imageUrl == undefined && { "imageComponent": image })
+}
+---
+
+<Card { ...ariaProperties }>
+  <span slot="meta">
+    <Badge text="Science" variant="tip" />
+    <Badge text="Technology" variant="danger" />
+  </span>
+  <p>{text}</p>
+</Card>
+
+<style is:global>
+  .card {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: light-dark(hsl(204 20% 94%), hsl(215 25% 15%));
+    color: light-dark(hsl(215 25% 27%), hsl(215 25% 89%));
+    max-width: 365px;
+    min-height: 550px;
+    width: 100%;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .card__image {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+
+  .card__content {
+    padding: 1rem;
+  }
+
+  .card__title {
+    margin-block-start: 0;
+    font-size: 1.25rem;
+  }
+</style>
