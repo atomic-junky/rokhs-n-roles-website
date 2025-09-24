@@ -39,8 +39,6 @@ const { data: post } = await loadQuery({
   enabled,
 });
 
-console.log(post)
-
 if (!post) {
   return new Response(null, {
     status: 404,
