@@ -5,7 +5,6 @@ import BlogCard from '../components/BlogCard.astro';
 import { getSanityImageURL } from "../utils/helpers";
 
 import blogBannerPlaceholder from '../assets/rnr_blog_placeholder.png';
-import { undefined } from "astro:schema";
 
 const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)[0...3]`);
 
