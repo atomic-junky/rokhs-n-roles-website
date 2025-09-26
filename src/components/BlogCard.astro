@@ -1,5 +1,6 @@
 ---
 import { Card, Badge } from 'accessible-astro-components'
+import { capitalizeFirstLetter } from '../utils/helpers';
 
 const {url, title, image, imageUrl, tags, text} = Astro.props;
 const ariaProperties = {
@@ -15,11 +16,17 @@ const ariaProperties = {
 ---
 
 <Card { ...ariaProperties }>
-  <span slot="meta">
-    <Badge text="Science" variant="tip" />
-    <Badge text="Technology" variant="danger" />
-  </span>
-  <p>{text}</p>
+  {tags && <span slot="meta">
+        {tags.map((tag: any) => {
+          return (
+            <a href={`/category/${tag}`}>
+              <Badge isButton size="lg">{capitalizeFirstLetter(tag)}</Badge>
+            </a>
+          )
+        })}
+      </span>
+  }
+  {text}
 </Card>
 
 <style is:global>
@@ -35,20 +42,42 @@ const ariaProperties = {
   }
 
   .card:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    box-shadow: none;
   }
 
-  .card__image {
+  /* .card .image {
     aspect-ratio: 16/9;
     object-fit: cover;
-  }
+  } */
 
-  .card__content {
+  .card .content {
     padding: 1rem;
+    overflow : hidden;
   }
 
-  .card__title {
+  .card .title {
     margin-block-start: 0;
     font-size: 1.25rem;
+  }
+  
+  .card .title  h3{
+    margin: 0 0 0.75rem 0;
+  }
+
+  .card .description {
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .badge {
+    letter-spacing: 0.025em;
+    z-index: 2;
+    background-color: transparent;
+    /* color: var(--background); */
+  }
+
+  button.badge:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
 </style>

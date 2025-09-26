@@ -1,6 +1,8 @@
 ---
+//  @ts-ignore
 import { sanityClient } from 'sanity:client';
-import BlogLayout from '../../layouts/BlogLayout.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro'
+import { capitalizeFirstLetter } from '../../utils/helpers';
 
 
 var { slug } = (Astro.params ?? "")
@@ -9,14 +11,18 @@ const baseQuery = `*[_type == "post" && defined(slug) && tags[] match lower("${s
 const postCount = await sanityClient.fetch(`count(${baseQuery})`);
 const title = capitalizeFirstLetter(slug)
 
-function capitalizeFirstLetter(val) {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+if (postCount <= 0) {
+    Astro.response.status = 404;
+    return new Response(null, {
+        status: 404,
+        statusText: 'Not found'
+  });
 }
 ---
 
 <BlogLayout
 	title={title}
 	postCount={postCount}
-	pageTitle={title}
+	pageTitle={"Catégorie : " + title}
 	baseQuery={baseQuery}
 />
