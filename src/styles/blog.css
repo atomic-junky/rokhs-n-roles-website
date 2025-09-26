@@ -15,11 +15,20 @@
 
 .blog-container {
 	display: flex;
-	flex-flow: row wrap;
+	flex-flow: column nowrap;
 	gap: 2rem;
 	justify-content: center;
 	max-width: 1200px;
 }
+
+.card-wrapper {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 2rem;
+	justify-content: center;
+	width: 100%;
+}
+
 
 div.blog-card {
 	position:relative;

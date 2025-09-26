@@ -3,40 +3,80 @@ import { sanityClient } from "sanity:client";
 import Base from '../layouts/Base.astro';
 import BlogCard from '../components/BlogCard.astro';
 import { getSanityImageURL } from "../utils/helpers";
+import BlogPagination from '../components/BlogPagination.astro';
 
 import blogBannerPlaceholder from '../assets/rnr_blog_placeholder.png';
 
-const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)[0...3]`);
+let page = Astro.url.searchParams.get("page") || "1";
+if (page && isNaN(Number(page))) {
+	page = "1";
+}
+if (typeof page == "string") {
+	page = page.toString()
+}
 
-// const htmlDateString = (date: number) => new Date(date).toLocaleDateString('fr-FR', {
-//   year: 'numeric',
-//   month: 'long',
-//   day: 'numeric',
-// });
+
+
+const postCount = await sanityClient.fetch(`count(*[_type == "post" && defined(slug)])`);
+const totalPages: number = Math.ceil(postCount / 3);
+const firstPage = `?page=1`;
+const previousPage = `?page=${Math.max(1, Number(page) - 1).toString()}`;
+const nextPage = `?page=${Math.min(totalPages, Number(page) + 1).toString()}`;
+const lastPage = `?page=${totalPages.toString()}`;
+
+const postFrom = (Number(page) - 1) * 3;
+const posts = await fetch_post(postFrom);
+
+async function fetch_post(from: number, count: number = 3) {
+	if (from >= postCount)
+		return []
+
+	const to: number = Math.min(from + count, postCount)
+	const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug)] | order(publishedAt desc)[${from}...${to}]`);
+	return posts
+}
 ---
 
 <Base title="Blog">
 <div class="blog-wrapper">
 	<h2>Les derniers posts</h2>
 	<div class="blog-container" id="blog-container">
-		{posts.map((post: any) => {
-			let imgUrl: any = undefined
-			if (post.mainImage && post.mainImage.asset)
-				imgUrl = getSanityImageURL(post.mainImage.asset).url() 
+		<div class="card-wrapper">
+			{posts.map((post: any) => {
+				let imgUrl: any = undefined
+				if (post.mainImage && post.mainImage.asset)
+					imgUrl = getSanityImageURL(post.mainImage.asset).url() 
 
-			return (
-				<BlogCard 
-					title={post.title}
-					imageUrl={imgUrl}
-					image={blogBannerPlaceholder}
-					url={'/posts/' + post.slug.current}
-					tags={post.tags}
-					text={post.preview}
-				/>
-			)})}
+				return (
+					<BlogCard 
+						title={post.title}
+						imageUrl={imgUrl}
+						image={blogBannerPlaceholder}
+						url={'/posts/' + post.slug.current}
+						tags={post.tags}
+						text={post.preview}
+					/>
+				)
+			})}
+		</div>
 		
-	<div class="blog-container-shadow"></div>
+	<div class="blog-controls">
+		<BlogPagination 
+		    firstPage={firstPage}
+			previousPage={previousPage}
+			nextPage={nextPage}
+			lastPage={lastPage}
+			currentPage={page}
+			totalPages={totalPages}
+		/>
+    </div>
 </div>
 
 </Base>
 
+<style>
+	.blog-controls {
+		display: flex;
+		justify-content: center;
+	}
+</style>

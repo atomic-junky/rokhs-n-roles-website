@@ -3,7 +3,7 @@ import Page from "../../layouts/Page.astro";
 import { loadQuery } from "../../lib/load-query";
 import { PortableText } from '@portabletext/react';
 import { getSanityImageURL } from "../../utils/helpers";
-import { Pagination } from 'accessible-astro-components'
+import BlogPagination from '../../components/BlogPagination.astro';
 
 var { slug } = (Astro.params ?? "")
 if (slug) slug.replaceAll('/', '');
@@ -75,30 +75,14 @@ const blogImageUrl = `url("${currentPost.mainImage ? getSanityImageURL(currentPo
       <PortableText value={post.currentPost.body} />
     </div>
     <div class="controls">
-      <Pagination
+      <BlogPagination
         firstPage={'/posts/' + firstPost.slug}
         previousPage={previousPost ? '/posts/' + previousPost.slug : ''}
         nextPage={nextPost ? '/posts/' + nextPost.slug : ''}
         lastPage={'/posts/' + lastPost.slug}
         currentPage={post.currentPost.index + 1}
         totalPages={postCount}
-        ariaLabel="Blog navigation"
       />
     </div>
   </section>
 </Page>
-
-<style is:global>
-  .pagination a {
-    border-color: #fff;
-  }
-
-  .pagination a:hover {
-    background-color: #fff;
-    box-shadow: none !important;
-  }
-
-  .pagination a:hover svg {
-    color: var(--secondary);
-  }
-</style>

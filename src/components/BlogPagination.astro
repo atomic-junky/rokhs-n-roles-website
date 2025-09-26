@@ -1,0 +1,31 @@
+---
+import { Pagination } from 'accessible-astro-components'
+
+
+const {firstPage, previousPage, nextPage, lastPage, currentPage, totalPages} = Astro.props;
+---
+
+<Pagination
+    firstPage={firstPage}
+    previousPage={previousPage}
+    nextPage={nextPage}
+    lastPage={lastPage}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    ariaLabel="Blog navigation"
+/>
+
+<style is:global>
+  .pagination a {
+    border-color: #fff;
+  }
+
+  .pagination a:hover {
+    background-color: #fff;
+    box-shadow: none !important;
+  }
+
+  .pagination a:hover svg {
+    color: var(--secondary);
+  }
+</style>
