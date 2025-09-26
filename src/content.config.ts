@@ -3,8 +3,6 @@ import { toHTML } from '@portabletext/to-html';
 import { loadQuery } from './lib/load-query';
 import { getSanityImageURL } from './utils/helpers';
 import { rssSchema } from '@astrojs/rss';
-import { PortableText } from '@portabletext/react';
-import ReactDOMServer from 'react-dom/server'
 
 const blog = defineCollection({
 	loader: async () => {

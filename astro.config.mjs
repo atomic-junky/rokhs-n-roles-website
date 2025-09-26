@@ -23,12 +23,13 @@ export default defineConfig({
       useCdn: SANITY_USE_CDN || false,
       studioBasePath: '/admin',   
       }),
-      // purgecss({
-      //   fontFace: true,
-      //   keyframes: true,
-      //   safelist: ['random', 'yep', 'button', /^nav-/],
-      //   blocklist: ['usedClass', /^nav-/]
-      // }),
+      purgecss({
+        fontFace: true,
+        keyframes: true,
+        content: [
+          process.cwd() + '/src/**/*.{astro}'
+        ],
+      }),
       icon(),
       react(),
   ],

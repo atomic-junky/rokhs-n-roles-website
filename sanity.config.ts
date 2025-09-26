@@ -18,7 +18,6 @@ if (!projectId || !dataset) {
 import {theme} from 'https://themer.sanity.build/api/hues?default=c0bebd;300&primary=978071;700&transparent=bfbebe;600&positive=43d675;300&caution=fbd024;200&darkest=111'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import { presentationTool } from 'sanity/presentation'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 
@@ -34,11 +33,6 @@ export default defineConfig({
   plugins: [
     structureTool(),
     visionTool(),
-    // presentationTool({
-    //   previewUrl: {
-    //     initial: `${process.env.CONFIG_BASE_URL}?preview=true`,
-    //   },
-    // }),
   ],
 
   schema: {
