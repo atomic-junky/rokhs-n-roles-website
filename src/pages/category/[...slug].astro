@@ -1,0 +1,22 @@
+---
+import { sanityClient } from 'sanity:client';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+
+var { slug } = (Astro.params ?? "")
+
+const baseQuery = `*[_type == "post" && defined(slug) && tags[] match lower("${slug}")] | order(publishedAt desc)`
+const postCount = await sanityClient.fetch(`count(${baseQuery})`);
+const title = capitalizeFirstLetter(slug)
+
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+---
+
+<BlogLayout
+	title={title}
+	postCount={postCount}
+	pageTitle={title}
+	baseQuery={baseQuery}
+/>

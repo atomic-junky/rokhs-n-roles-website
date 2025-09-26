@@ -1,0 +1,91 @@
+---
+import Base from './Base.astro';
+import BlogPagination from '../components/BlogPagination.astro';
+import { getCurrentPage, calculatePagination } from '../utils/pagination';
+import { sanityClient } from 'sanity:client';
+import BlogCard from '../components/BlogCard.astro';
+import { getSanityImageURL } from '../utils/helpers';
+import blogBannerPlaceholder from '../assets/rnr_blog_placeholder.png';
+
+interface Props {
+    title: string;
+    postCount: number;
+    pageTitle: string;
+    baseQuery: string;
+}
+
+const { 
+    title,
+    postCount,
+    pageTitle,
+    baseQuery
+} = Astro.props;
+
+const currentPage = getCurrentPage(Astro.url.searchParams);
+
+const {
+    totalPages,
+    offset,
+    hasNextPage,
+    hasPreviousPage,
+    firstPageUrl,
+    previousPageUrl,
+    nextPageUrl,
+    lastPageUrl
+} = calculatePagination(currentPage, postCount, 3)
+
+const posts = await fetch_post(offset, 3)
+
+async function fetch_post(from: number, count: number = 3) {
+	if (from >= postCount)
+		return []
+
+	const to: number = Math.min(from + count, postCount)
+	const posts = await sanityClient.fetch(`${baseQuery}[${from}...${to}]`);
+	return posts
+}
+---
+
+<Base title={title}>
+    <div class="blog-wrapper">
+        <h2>{pageTitle}</h2>
+        <div class="blog-container" id="blog-container">
+            <div class="card-wrapper">
+                {posts.map((post: any) => {
+                    let imgUrl: any = undefined
+                    if (post.mainImage && post.mainImage.asset)
+                        imgUrl = getSanityImageURL(post.mainImage.asset).url() 
+
+                    return (
+                        <BlogCard 
+                            title={post.title}
+                            imageUrl={imgUrl}
+                            image={blogBannerPlaceholder}
+                            url={'/posts/' + post.slug.current}
+                            tags={post.tags}
+                            text={post.preview}
+                        />
+                    )
+                })}
+            </div>
+           
+            <div class="blog-controls">
+                <BlogPagination
+                    firstPage={firstPageUrl}
+                    previousPage={previousPageUrl}
+                    nextPage={nextPageUrl}
+                    lastPage={lastPageUrl}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                />
+            </div>
+        </div>
+    </div>
+</Base>
+
+<style>
+    .blog-controls {
+        display: flex;
+        justify-content: center;
+    }
+</style>
