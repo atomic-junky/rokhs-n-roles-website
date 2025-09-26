@@ -5,9 +5,6 @@ import sanitizeHtml from 'sanitize-html';
 
 export async function GET(context) {
     const blog = await getCollection('blog');
-    console.log(sanitizeHtml(blog[0].data.content, {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-    }))
     return rss({
         stylesheet: '/rss/styles.xsl',
         title: 'Blog - Rokhs & Rôles',
