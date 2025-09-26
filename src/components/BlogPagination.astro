@@ -17,15 +17,19 @@ const {firstPage, previousPage, nextPage, lastPage, currentPage, totalPages} = A
 
 <style is:global>
   .pagination a {
-    border-color: #fff;
+    border-color: currentColor;
   }
 
   .pagination a:hover {
-    background-color: #fff;
+    background-color: currentColor;
     box-shadow: none !important;
   }
 
   .pagination a:hover svg {
+    color: var(--background);
+  }
+
+  .blog-content-section .pagination a:hover svg {
     color: var(--secondary);
   }
 </style>

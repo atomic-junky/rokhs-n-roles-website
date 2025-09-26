@@ -83,13 +83,16 @@ body {
 	color: var(--text);
 }
 
-.wrapper {
+.wrapper, .blog-wrapper {
 	min-height: var(--wrapper-height);
+	padding-top: 70px;
+	min-height: 100vh;
+}
+
+.wrapper {
 	display: flex;
 	align-items: center;
 	flex-flow: column wrap;
-	padding: 70px 0 0 0;
-	min-height: 100vh;
 }
 
 .main__content {
