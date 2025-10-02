@@ -31,6 +31,7 @@
     "accessible-astro-components": "^5.0.1",
     "astro": "^5.13.10",
     "astro-icon": "^1.1.5",
+    "esbuild": "^0.25.10",
     "markdown-it": "^14.1.0",
     "purgecss": "^7.0.2",
     "react": "^19.1.1",
