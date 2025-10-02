@@ -10,13 +10,13 @@ let enabled
 const referrer = Astro.url.href
 if (referrer.includes('preview')) {enabled = 'true'} else {enabled = 'false'}
 
-const { data: post } = await loadQuery({
+const { data: page } = await loadQuery({
   query: `*[_type == "page" && slug.current == "${slug}"][0]`,
   params: {},
   enabled,
 });
 
-if (!post) {
+if (!page) {
     Astro.response.status = 404;
     return new Response(null, {
     status: 404,
@@ -25,8 +25,8 @@ if (!post) {
 }
 ---
 
-<Page title=post.title>
-    {post?.sections?.map((section: any) => (
+<Page title={page.title}>
+    {page?.sections?.map((section: any) => (
         <section>
             <div>
                 <PortableText value={section.content} />
