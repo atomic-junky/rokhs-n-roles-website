@@ -85,7 +85,6 @@ body {
 
 .wrapper, .blog-wrapper {
 	min-height: var(--wrapper-height);
-	padding-top: 70px;
 	min-height: 100vh;
 }
 
@@ -93,6 +92,7 @@ body {
 	display: flex;
 	align-items: center;
 	flex-flow: column wrap;
+	padding-top: 70px;
 }
 
 .main__content {
