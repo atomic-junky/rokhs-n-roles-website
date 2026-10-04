@@ -2,10 +2,12 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 
-import HeaderLink from './HeaderLink.astro';
-import JoinButton from './JoinButton.astro';
+import HeaderLink from '../components/HeaderLink.astro';
+import JoinButton from '../components/JoinButton.astro';
+import AdherentWidget from '../components/AdherentWidget.astro';
 import { SITE_TITLE } from '../consts';
 import { loadQuery } from "../lib/load-query";
+import { getReservationSession } from '../lib/reservation-auth';
 
 import logo from '../assets/rnr_logo.svg';
 
@@ -27,6 +29,7 @@ const { data: header } = await loadQuery({
 	enabled,
 });
 
+const memberEmail = await getReservationSession(Astro.cookies);
 ---
 
 <header id="header">
@@ -50,7 +53,14 @@ const { data: header } = await loadQuery({
 				return <HeaderLink href={pageSlug}>{pageTitle}</HeaderLink>
 			})}
 			<div class="header-link-join">
-				<JoinButton />
+				{memberEmail ? (
+					<div class="adherent-widget">
+						<Icon aria-hidden="true" name="lucide:user" />
+						<span class="adherent-email">{memberEmail}</span>
+					</div>
+				) : (
+					<JoinButton />
+				)}
 			</div>
 			<a class="menu-icon" onclick="toggleMenu()">
 				<Icon aria-hidden="true" name="lucide:menu"/>
@@ -58,7 +68,11 @@ const { data: header } = await loadQuery({
 		</div>
 
 		<div class="join-container header-right" transition:persist>
-			<JoinButton />
+			{memberEmail ? (
+				<AdherentWidget email={memberEmail} />
+			) : (
+				<JoinButton />
+			)}
 		</div>
 	</div>
 </header>
@@ -75,3 +89,32 @@ const { data: header } = await loadQuery({
 		}
 	}
 </script>
+
+<style>
+	.adherent-widget {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.9rem;
+		border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+		border-radius: var(--border05);
+		background: color-mix(in srgb, var(--secondary) 10%, var(--background));
+		font-size: var(--small);
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.adherent-widget :global(svg) {
+		width: 1.1em;
+		height: 1.1em;
+		color: var(--secondary);
+		flex-shrink: 0;
+	}
+
+	.adherent-email {
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>

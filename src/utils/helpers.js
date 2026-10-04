@@ -10,3 +10,7 @@ export function getSanityImageURL(source) {
 export function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
+export function title(text) {
+    return text.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}

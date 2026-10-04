@@ -1,0 +1,183 @@
+---
+import AdherentPage from '../../../layouts/AdherentPage.astro';
+import { loadBooking, dateParameter, weekdayOf, formatSlot } from '../../../lib/reservations';
+
+Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=3600');
+
+const slug = Astro.params.slug?.replaceAll('/', '') ?? '';
+
+const requestedMonth = Astro.url.searchParams.get('month');
+const parsedMonth = requestedMonth && /^\d{4}-\d{2}$/.test(requestedMonth) ? new Date(`${requestedMonth}-01T12:00:00`) : new Date();
+const selectedMonth = Number.isNaN(parsedMonth.getTime()) ? new Date() : parsedMonth;
+const monthStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1, 12);
+const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0, 12);
+
+const monthParameter = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+const previousMonth = new Date(monthStart.getFullYear(), monthStart.getMonth() - 1, 1, 12);
+const nextMonth = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1, 12);
+const monthLabel = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(monthStart);
+const firstWeekday = weekdayOf(monthStart);
+const daysInMonth = monthEnd.getDate();
+const calendarCells = Array.from({ length: Math.ceil((firstWeekday + daysInMonth) / 7) * 7 }, (_, index) => {
+	const dayNumber = index - firstWeekday + 1;
+	if (dayNumber < 1 || dayNumber > daysInMonth) return null;
+	const date = new Date(monthStart.getFullYear(), monthStart.getMonth(), dayNumber, 12);
+	return { date, dayNumber };
+});
+
+const { rooms, weeklySlots, getDay } = await loadBooking({
+	roomSlug: slug,
+	from: dateParameter(monthStart),
+	to: dateParameter(monthEnd),
+});
+const room = rooms[0];
+if (!room) return new Response(null, { status: 404 });
+
+const hours = [...new Set(weeklySlots(room).map(formatSlot))].join(' · ');
+---
+
+<AdherentPage title={room.name} description={`Voir les dates disponibles pour ${room.name}.`}>
+	<div class="room-page">
+		<a class="back-link" href="/reservations">&larr; Retour aux salles</a>
+
+		<header class="room-header">
+			<div>
+				<p class="eyebrow">{room.location}</p>
+				<h1>{room.name}</h1>
+				<p>Choisissez une date pour réserver la salle ou rejoindre une partie existante.</p>
+			</div>
+		</header>
+
+		<nav class="month-navigation" aria-label="Navigation entre les mois">
+			<a href={`/reservations/${room.slug}?month=${monthParameter(previousMonth)}`} aria-label="Mois précédent">&larr;</a>
+			<strong>{monthLabel}</strong>
+			<a href={`/reservations/${room.slug}?month=${monthParameter(nextMonth)}`} aria-label="Mois suivant">&rarr;</a>
+		</nav>
+
+		<div class="calendar-wrap">
+			<div class="weekday-headings" aria-hidden="true">
+				{['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'].map((day) => <span>{day}</span>)}
+			</div>
+			<div class="month-calendar" aria-label={`Calendrier de ${monthLabel}`}>
+				{calendarCells.map((cell) => {
+					if (!cell) return <span class="calendar-placeholder" aria-hidden="true"></span>;
+					const info = getDay(room, cell.date);
+					const isOpen = info.status === 'available' || info.status === 'reserved';
+					return (
+						<a class:list={['month-day', info.status]} href={isOpen ? `/reservations/${room.slug}/${info.key}` : undefined}>
+							<strong>{cell.dayNumber}</strong>
+							{isOpen && <small>{info.description ?? 'Disponible'}</small>}
+							{info.closed && <small>Vacances</small>}
+						</a>
+					);
+				})}
+			</div>
+		</div>
+	</div>
+</AdherentPage>
+
+<style>
+	.room-page {
+		max-width: 1080px;
+		min-height: 80vh;
+		margin: 0 auto;
+		padding: 8rem 1.5rem 5rem;
+	}
+
+	.back-link {
+		display: inline-block;
+		margin-bottom: 2.5rem;
+		color: var(--text);
+		border-bottom-color: var(--text);
+		font-size: var(--small);
+	}
+
+	.room-header {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.room-header h1 { margin: 0 0 1rem; }
+	.room-header p { margin-left: 0; }
+	
+	.month-navigation {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		max-width: 380px;
+		margin-bottom: 1rem;
+	}
+
+	.month-navigation a {
+		display: grid;
+		width: 2.5rem;
+		height: 2.5rem;
+		place-items: center;
+		border: 1px solid var(--primary);
+		border-radius: 50%;
+		color: var(--primary);
+		font-size: 1.3rem;
+	}
+
+	.calendar-wrap {
+		padding: 1rem;
+		border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+		border-radius: var(--border05);
+		background: color-mix(in srgb, var(--background) 88%, var(--secondary));
+	}
+
+	.weekday-headings,
+	.month-calendar {
+		display: grid;
+		grid-template-columns: repeat(7, minmax(0, 1fr));
+		gap: 0.5rem;
+	}
+
+	.weekday-headings {
+		margin-bottom: 0.5rem;
+		padding: 0 0.25rem;
+		font-size: var(--small);
+		font-weight: 600;
+		text-align: center;
+		text-transform: capitalize;
+	}
+
+	.month-day {
+		display: grid;
+		align-content: start;
+		gap: 0.5rem;
+		min-height: 105px;
+		padding: 0.75rem;
+		border: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
+		border-radius: 0.25rem;
+		background: var(--background);
+		color: var(--text);
+		width: 100%;
+	}
+
+	.month-day.available { border-left: 4px solid #4c9a6b; }
+	.month-day.reserved { border-left: 4px solid #d59a3a; background: color-mix(in srgb, #d59a3a 9%, var(--background)); }
+	.month-day.closed { border-left: 4px solid #d53a3a; background: color-mix(in srgb, #d53a3a 9%, var(--background)); }
+	.month-day:hover { border-color: var(--secondary); }
+	.month-day.empty { opacity: 0.35; }
+	.month-day.past { opacity: 0.35; }
+	.calendar-placeholder { min-height: 105px; }
+
+	.calendar-note {
+		margin: 1.5rem 0 0;
+		font-size: var(--small);
+		opacity: 0.7;
+	}
+
+	@media screen and (max-width: 700px) {
+		.room-page { padding-top: 6rem; }
+		.room-header { align-items: start; flex-direction: column; }
+		.calendar-wrap { overflow-x: auto; }
+		.weekday-headings,
+		.month-calendar { min-width: 630px; }
+	}
+</style>

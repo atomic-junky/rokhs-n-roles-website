@@ -4,7 +4,11 @@ import { loadQuery } from "../lib/load-query";
 import PortableText from '../components/SanityPortableText.astro';
 
 var { slug } = (Astro.params ?? "")
-if (slug) slug.replaceAll('/', '');
+const normalizedSlug = slug?.replaceAll('/', '')
+
+if (normalizedSlug === 'reservations') {
+    return Astro.rewrite('/reservations');
+}
 
 Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=3600');
 

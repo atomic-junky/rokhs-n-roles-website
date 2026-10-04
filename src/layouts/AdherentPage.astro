@@ -1,0 +1,10 @@
+---
+import Page from '../layouts/Page.astro';
+ 
+const { title, description } = Astro.props;
+---
+ 
+<Page title={title} description={description}>
+	<slot />
+</Page>
+ 

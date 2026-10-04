@@ -23,6 +23,9 @@ const { title, description } = Astro.props;
 <meta name="description" content={description} />
 <meta name="theme-color" content="#5b4ab0" />
 
+<link rel="preload" href="/assets/fonts/Lucida%20Sans%20Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/assets/fonts/Lucida%20Sans%20Demibold.ttf" as="font" type="font/ttf" crossorigin />
+
 <!-- Open Graph  -->
 <meta property="og:title" content={title} />
 <meta property="og:site_name" content={SITE_TITLE} />

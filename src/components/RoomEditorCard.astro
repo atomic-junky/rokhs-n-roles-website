@@ -1,0 +1,47 @@
+---
+import SlotEditorRow from './SlotEditorRow.astro';
+
+interface Props {
+	room: { slug: string; name: string; location: string; schoolCalendar: boolean };
+	slots: Array<{ id: number; weekday: number; startMinute: number; endMinute: number; active: boolean }>;
+}
+
+const { room, slots } = Astro.props;
+---
+
+<details class="room-card">
+	<summary class="room-summary">
+		<span>
+			<strong data-room-title>{room.name}</strong>
+			<small data-room-slug>{room.slug ? `/${room.slug}` : ''}</small>
+		</span>
+	</summary>
+	<form class="room-form" data-room-form data-slug={room.slug || undefined}>
+		<div class="room-fields">
+			<div class="field-group">
+				<label>Nom</label>
+				<input name="name" value={room.name} required />
+			</div>
+			<div class="field-group">
+				<label>Lieu</label>
+				<input name="location" value={room.location} required />
+			</div>
+			<div class="field-group">
+				<label>Hors vacances scolaires</label>
+				<input name="schoolCalendar" type="checkbox" checked={room.schoolCalendar} />
+			</div>
+		</div>
+		<div class="slots-header">
+			<h2>Créneaux</h2>
+			<button class="primary-button" type="button" data-add-slot>Ajouter un créneau</button>
+		</div>
+		<div class="slots" data-slots>
+			{slots.map((slot) => <SlotEditorRow availability={slot} />)}
+		</div>
+		<div class="room-actions">
+			<button class="primary-button" type="submit">Enregistrer</button>
+			<button class="danger-button" type="button" data-delete-room>Supprimer la salle</button>
+			<span class="save-status" role="status"></span>
+		</div>
+	</form>
+</details>

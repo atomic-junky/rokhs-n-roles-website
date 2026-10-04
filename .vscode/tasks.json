@@ -40,6 +40,53 @@
 			"label": "build",
 			"type": "shell",
 			"command": "npm run build"
+		},
+		{
+			"label": "inspect reservation weekdays",
+			"type": "shell",
+			"command": "node -e \"import('@libsql/client').then(async ({createClient})=>{const db=createClient({url:'file:local.db'}); const r=await db.execute('select room, weekday, start_minute, end_minute from room_availabilities order by room, weekday'); console.log(JSON.stringify(r.rows,null,2));})\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "inspect reservation weekdays",
+			"type": "shell",
+			"command": "node --input-type=module -e 'import(\"@libsql/client\").then(async ({createClient})=>{const db=createClient({url:\"file:local.db\"}); const r=await db.execute(\"select room, weekday, start_minute, end_minute from room_availabilities order by room, weekday\"); console.log(JSON.stringify(r.rows,null,2));})'",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "inspect weekdays second",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"--input-type=module",
+				"-e",
+				"import('@libsql/client').then(async ({createClient})=>{const db=createClient({url:'file:local.db'}); const r=await db.execute('select room, weekday, start_minute, end_minute from room_availabilities order by room, weekday'); console.log(JSON.stringify(r.rows,null,2));})"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "migrate weekday values",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/migrate-weekday-values.mjs"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "validate reservation editor build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

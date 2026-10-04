@@ -1,0 +1,90 @@
+---
+type Props = {
+	href?: string;
+	dayLabel: string;
+	dateLabel: string;
+    status: 'available' | 'reserved' | 'closed' | 'past' | 'empty';
+	description?: string;
+	time?: string;
+	compact?: boolean;
+};
+
+const { href, dayLabel, dateLabel, status, description, time, compact = false } = Astro.props;
+const classes = ['reservation-date-card', status, compact && 'compact'];
+---
+
+{status !== 'empty' ? (
+	<a class:list={classes} href={href}>
+		{!compact && <small>{dateLabel}</small>}
+		<strong>{compact ? dateLabel : dayLabel}</strong>
+		{status === 'available' && <small>Disponible{time ? ` · ${time}` : ''}</small>}
+		{status === 'reserved' && <small>{description}</small>}
+        {status === 'closed' && <small>Vacances scolaires</small>}
+        {status === 'past' && <small>Date passée</small>}
+	</a>
+) : (
+	<div class:list={classes}>
+		<small>{dateLabel}</small>
+		{status === 'available' && <small>Disponible{time ? ` · ${time}` : ''}</small>}
+		{status === 'reserved' && <small>{description}</small>}
+        {status === 'closed' && <small>Vacances scolaires</small>}
+        {status === 'past' && <small>Date passée</small>}
+	</div>
+)}
+
+<style>
+    .reservation-date-card {
+        display: grid;
+        align-content: start;
+        gap: 0.4rem;
+        min-height: 105px;
+        padding: 0.75rem;
+        border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+        border-radius: 0.25rem;
+        background: var(--background);
+        color: var(--text);
+        width: 100%;
+        max-width: 50%;
+        overflow: hidden;
+    }
+    .reservation-date-card * {
+        text-transform: capitalize;
+    }
+    .reservation-date-card.available {
+        border-left: 4px solid #4c9a6b;
+    }
+    .reservation-date-card.reserved {
+        border-left: 4px solid #d59a3a;
+        background: color-mix(in srgb, #d59a3a 9%, var(--background));
+    }
+    .reservation-date-card.closed {
+        border-left: 4px solid #d53a3a;
+        background: color-mix(in srgb, #d53a3a 8%, var(--background));
+        opacity: 0.7;
+    }
+    .reservation-date-card.past {
+        border-left: 4px solid #999;
+        background: color-mix(in srgb, #999 5%, var(--background));
+        opacity: 0.5;
+    }
+    .reservation-date-card.empty, .reservation-date-card.past {
+        opacity: 0.4;
+    }
+    .reservation-date-card:hover {
+        border-color: var(--secondary);
+    }
+    .reservation-date-card.compact {
+        max-width: 75px;
+    }
+    .reservation-date-card.compact strong {
+        font-size: 1rem;
+    }
+    @media screen and (max-width: 760px) {
+        .reservation-date-card {
+            max-width: 100%;
+        }
+        .reservation-date-card.empty {
+            display: none;
+        }
+    }
+</style>

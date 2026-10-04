@@ -1,0 +1,37 @@
+---
+interface Props {
+	availability?: { id: number; weekday: number; startMinute: number; endMinute: number; active: boolean };
+}
+
+const weekdays = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const timeValue = (minutes: number) =>
+	`${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+
+const { availability = { id: undefined, weekday: 0, startMinute: 18 * 60, endMinute: 22 * 60 + 30, active: true } } = Astro.props;
+---
+
+<div class="slot-card" data-slot-id={availability.id}>
+	<div class="room-fields">
+		<div class="field-group">
+			<label>Jour</label>
+			<select data-field="weekday">
+				{weekdays.map((label, index) => (
+					<option value={index} selected={availability.weekday === index}>{label}</option>
+				))}
+			</select>
+		</div>
+		<div class="field-group">
+			<label>Début</label>
+			<input data-field="start" type="time" value={timeValue(availability.startMinute)} required />
+		</div>
+		<div class="field-group">
+			<label>Fin</label>
+			<input data-field="end" type="time" value={timeValue(availability.endMinute)} required />
+		</div>
+		<div class="field-group">
+			<label>Actif</label>
+			<input data-field="active" type="checkbox" checked={availability.active} />
+		</div>
+	</div>
+	<button class="icon-button" type="button" data-remove-slot aria-label="Supprimer ce créneau">&times;</button>
+</div>

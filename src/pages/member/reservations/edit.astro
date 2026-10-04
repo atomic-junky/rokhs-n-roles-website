@@ -1,0 +1,340 @@
+---
+import AdherentPage from '../../../layouts/AdherentPage.astro'
+import RoomEditorCard from '../../../components/RoomEditorCard.astro'
+import SlotEditorRow from '../../../components/SlotEditorRow.astro'
+import { loadRooms, loadAvailabilities } from '../../../lib/reservations'
+
+const rooms = await loadRooms()
+const slotsByRoom = new Map(
+	await Promise.all(
+		rooms.map(async (room) => [room.slug, await loadAvailabilities(room.slug)] as const)
+	)
+)
+---
+
+<AdherentPage
+	title="Édition des salles"
+	description="Gérer les salles et leurs créneaux."
+	eyebrow="Administration"
+>
+	<section>
+		<div class="editor-page">
+			<header class="editor-header">
+				<div>
+					<h1>Salles et créneaux</h1>
+					<p>Modifiez les salles et leurs disponibilités.</p>
+				</div>
+				<button class="primary-button" type="button" data-open-new-room>Ajouter une salle</button>
+			</header>
+			<div class="room-list">
+				{rooms.map((room) => (
+					<RoomEditorCard room={room} slots={slotsByRoom.get(room.slug) ?? []} />
+				))}
+			</div>
+		</div>
+	</section>
+</AdherentPage>
+
+<template data-slot-template><SlotEditorRow /></template>
+<template data-room-template>
+	<RoomEditorCard room={{ slug: '', name: '', location: '', schoolCalendar: true }} slots={[]} />
+</template>
+
+<dialog data-new-room-dialog>
+	<form method="dialog" data-new-room-form>
+		<div class="dialog-header">
+			<h2>Nouvelle salle</h2>
+			<button class="icon-button" type="button" data-close-dialog aria-label="Fermer">&times;</button>
+		</div>
+		<div class="dialog-section">
+			<label for="new-room-name">Nom</label>
+			<input id="new-room-name" name="name" required />
+		</div>
+		<div class="dialog-section">
+			<label for="new-room-location">Lieu</label>
+			<input id="new-room-location" name="location" required />
+		</div>
+		<div class="dialog-section">
+			<input id="new-room-calendar" name="schoolCalendar" type="checkbox" checked />
+			<label class="checkbox" for="new-room-calendar">Hors vacances scolaires</label>
+		</div>
+		<p class="save-status" role="status"></p>
+		<button class="primary-button" type="submit">Créer la salle</button>
+	</form>
+</dialog>
+
+<script>
+	import { actions, isInputError, type ActionError } from 'astro:actions'
+
+	const toMinutes = (value: string) => {
+		const [hours, minutes] = value.split(':').map(Number)
+		return hours * 60 + minutes
+	}
+
+	const errorMessage = (error: ActionError) =>
+		(isInputError(error) ? Object.values(error.fields).flat()[0] : undefined) ?? error.message
+
+	const showStatus = (form: HTMLFormElement, text: string, isError = false) => {
+		const element = form.querySelector<HTMLElement>('.save-status')
+		if (!element) return
+		element.textContent = text
+		element.classList.toggle('error', isError)
+	}
+
+	const field = <T extends HTMLElement>(card: HTMLElement, name: string) =>
+		card.querySelector<T>(`[data-field="${name}"]`)!
+
+	const readSlots = (form: HTMLFormElement) =>
+		[...form.querySelectorAll<HTMLElement>('.slot-card')].map((card) => ({
+			id: card.dataset.slotId ? Number(card.dataset.slotId) : undefined,
+			weekday: Number(field<HTMLSelectElement>(card, 'weekday').value),
+			startMinute: toMinutes(field<HTMLInputElement>(card, 'start').value),
+			endMinute: toMinutes(field<HTMLInputElement>(card, 'end').value),
+			active: field<HTMLInputElement>(card, 'active').checked,
+		}))
+
+	type SavedRoom = { slug: string; name: string; slots: { id: number; weekday: number; startMinute: number }[] }
+
+	const applySaved = (form: HTMLFormElement, saved: SavedRoom) => {
+		form.dataset.slug = saved.slug
+		const card = form.closest('.room-card')!
+		card.querySelector('[data-room-title]')!.textContent = saved.name
+		card.querySelector('[data-room-slug]')!.textContent = `/${saved.slug}`
+		const idsByStart = new Map(saved.slots.map((s) => [`${s.weekday}:${s.startMinute}`, s.id]))
+		form.querySelectorAll<HTMLElement>('.slot-card').forEach((row) => {
+			const key = `${field<HTMLSelectElement>(row, 'weekday').value}:${toMinutes(field<HTMLInputElement>(row, 'start').value)}`
+			const id = idsByStart.get(key)
+			if (id) row.dataset.slotId = String(id)
+		})
+	}
+
+	const saveRoom = async (form: HTMLFormElement) => {
+		const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!
+		const data = new FormData(form)
+		submit.disabled = true
+		showStatus(form, 'Enregistrement…')
+		const { data: saved, error } = await actions.saveRoom({
+			slug: form.dataset.slug || undefined,
+			name: String(data.get('name')),
+			location: String(data.get('location')),
+			schoolCalendar: data.has('schoolCalendar'),
+			slots: readSlots(form),
+		})
+		submit.disabled = false
+		if (error) return showStatus(form, errorMessage(error), true)
+		applySaved(form, saved)
+		showStatus(
+			form,
+			saved.deactivated
+				? `Enregistré. ${saved.deactivated} créneau(x) avec des réservations désactivé(s) au lieu d’être supprimé(s).`
+				: 'Enregistré'
+		)
+	}
+
+	const createRoom = async (form: HTMLFormElement) => {
+		const data = new FormData(form)
+		const { data: saved, error } = await actions.saveRoom({
+			name: String(data.get('name')),
+			location: String(data.get('location')),
+			schoolCalendar: data.has('schoolCalendar'),
+			slots: [],
+		})
+		if (error) return showStatus(form, errorMessage(error), true)
+
+		const template = document.querySelector<HTMLTemplateElement>('[data-room-template]')!
+		const card = (template.content.cloneNode(true) as DocumentFragment).querySelector<HTMLDetailsElement>('.room-card')!
+		const roomForm = card.querySelector<HTMLFormElement>('form')!
+		roomForm.querySelector<HTMLInputElement>('[name="name"]')!.value = saved.name
+		roomForm.querySelector<HTMLInputElement>('[name="location"]')!.value = saved.location
+		roomForm.querySelector<HTMLInputElement>('[name="schoolCalendar"]')!.checked = saved.schoolCalendar
+		applySaved(roomForm, saved)
+		card.open = true
+		document.querySelector('.room-list')!.append(card)
+
+		form.reset()
+		showStatus(form, '')
+		form.closest('dialog')!.close()
+		card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	}
+
+	const deleteRoom = async (form: HTMLFormElement) => {
+		if (!confirm('Supprimer cette salle et ses créneaux ?')) return
+		const { error } = await actions.deleteRoom({ slug: form.dataset.slug ?? '' })
+		if (error) return showStatus(form, errorMessage(error), true)
+		form.closest('.room-card')!.remove()
+	}
+
+	document.addEventListener('submit', (event) => {
+		const form = event.target as HTMLFormElement
+		if (form.matches('[data-room-form]')) {
+			event.preventDefault()
+			saveRoom(form)
+		} else if (form.matches('[data-new-room-form]')) {
+			event.preventDefault()
+			createRoom(form)
+		}
+	})
+
+	document.addEventListener('click', (event) => {
+		const target = event.target as Element
+
+		if (target.closest('[data-open-new-room]')) {
+			document.querySelector<HTMLDialogElement>('[data-new-room-dialog]')!.showModal()
+		} else if (target.closest('[data-close-dialog]')) {
+			target.closest('dialog')!.close()
+		} else if (target.closest('[data-add-slot]')) {
+			const template = document.querySelector<HTMLTemplateElement>('[data-slot-template]')!
+			target.closest('form')!.querySelector('[data-slots]')!.append(template.content.cloneNode(true))
+		} else if (target.closest('[data-remove-slot]')) {
+			if (confirm('Supprimer ce créneau ?')) target.closest('.slot-card')!.remove()
+		} else if (target.closest('[data-delete-room]')) {
+			deleteRoom(target.closest('form')!)
+		}
+	})
+</script>
+
+<style is:global>
+.editor-page {
+	display: grid;
+	gap: 2rem;
+	min-width: 0;
+}
+.editor-header {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: end;
+	justify-content: space-between;
+	gap: 2rem;
+}
+.editor-header > div {
+	display: grid;
+	gap: 0.5rem;
+}
+.editor-header h1,
+.editor-header p {
+	margin: 0;
+}
+.room-list {
+	display: grid;
+	gap: 1.25rem;
+}
+.room-card {
+	min-width: 0;
+	border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+	border-radius: var(--border05);
+	background: color-mix(in srgb, var(--background) 90%, var(--secondary));
+}
+.room-summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.25rem;
+	cursor: pointer;
+	list-style: none;
+}
+.room-summary::-webkit-details-marker {
+	display: none;
+}
+.room-summary::after {
+	content: '+';
+	font-size: 1.5rem;
+}
+.room-card[open] .room-summary::after {
+	content: '−';
+}
+.room-summary > span:first-child {
+	display: grid;
+	gap: 0.25rem;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.room-form {
+	display: grid;
+	gap: 1.25rem;
+	padding: 0 1.25rem 1.25rem;
+}
+
+.room-fields {
+	display: flex;
+	flex-flow: row wrap;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+	align-items: start;
+	gap: 1rem;
+}
+
+.slots-header,
+.room-actions {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	gap: 1rem;
+}
+.slots-header {
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.slots-header h2 {
+	margin: 0;
+	font-size: var(--h4);
+}
+.slots {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.slot-card {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.9rem;
+	border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+	border-radius: 0.25rem;
+	background: var(--background);
+}
+.field-group {
+	display: flex;
+	flex: 1;
+	flex-flow: column nowrap;
+	gap: 0.25rem;
+	width: 100%;
+	height: 100%;
+}
+
+.field-group input {
+	height: 100%;
+}
+
+.save-status {
+	font-size: var(--small);
+	opacity: 0.7;
+}
+.save-status:not(.error) {
+	color: #347a50;
+	opacity: 1;
+}
+.save-status.error {
+	color: #b33a3a;
+	opacity: 1;
+}
+
+@media (max-width: 760px) {
+	.editor-page {
+		gap: 1.5rem;
+	}
+	.editor-header,
+	.room-actions {
+		align-items: stretch;
+	}
+	.room-summary {
+		padding: 1rem;
+	}
+	.room-form {
+		padding: 0 1rem 1rem;
+	}
+	.room-fields {
+		flex-flow: column nowrap;
+	}
+}
+</style>

@@ -1,0 +1,156 @@
+---
+import { actions } from 'astro:actions';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+	email: string;
+}
+
+const { email } = Astro.props;
+---
+
+<div class="adherent-widget" data-adherent-widget>
+	<button
+		type="button"
+		class="adherent-trigger"
+		aria-haspopup="true"
+		aria-expanded="false"
+		aria-label="Menu du compte adhérent"
+		data-adherent-trigger
+	>
+		<Icon aria-hidden="true" name="lucide:user" />
+		<span class="adherent-email">{email}</span>
+		<Icon aria-hidden="true" name="lucide:chevron-down" class="adherent-chevron" />
+	</button>
+
+	<div class="adherent-menu" hidden data-adherent-menu>
+		<form method="POST" action={actions.logout} data-logout-form>
+			<button type="submit" class="adherent-logout">
+				<Icon aria-hidden="true" name="lucide:log-out" />
+				Se déconnecter
+			</button>
+		</form>
+	</div>
+</div>
+
+<script>
+	import { actions } from 'astro:actions';
+
+	document.querySelectorAll<HTMLElement>('[data-adherent-widget]').forEach((widget) => {
+		const trigger = widget.querySelector<HTMLButtonElement>('[data-adherent-trigger]');
+		const menu = widget.querySelector<HTMLElement>('[data-adherent-menu]');
+		const logoutForm = widget.querySelector<HTMLFormElement>('[data-logout-form]');
+
+		if (!trigger || !menu || !logoutForm) return;
+
+		const closeMenu = () => {
+			menu.hidden = true;
+			trigger.setAttribute('aria-expanded', 'false');
+		};
+
+		const openMenu = () => {
+			menu.hidden = false;
+			trigger.setAttribute('aria-expanded', 'true');
+		};
+
+		trigger.addEventListener('click', (e) => {
+			e.stopPropagation();
+			menu.hidden ? openMenu() : closeMenu();
+		});
+
+		document.addEventListener('click', (e) => {
+			if (!widget.contains(e.target as Node)) closeMenu();
+		});
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') closeMenu();
+		});
+
+		logoutForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			await actions.logout(new FormData(logoutForm));
+			window.location.href = '/';
+		});
+	});
+</script>
+
+<style>
+	.adherent-widget {
+		position: relative;
+	}
+
+	.adherent-trigger {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.9rem;
+		border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+		border-radius: var(--border05);
+		background: color-mix(in srgb, var(--secondary) 10%, var(--background));
+		font: inherit;
+		font-size: var(--small);
+		font-weight: 600;
+		color: var(--text);
+		cursor: pointer;
+	}
+
+	.adherent-trigger :global(svg) {
+		width: 1.1em;
+		height: 1.1em;
+		color: var(--secondary);
+		flex-shrink: 0;
+	}
+
+	.adherent-chevron {
+		margin-left: 0.1rem;
+	}
+
+	.adherent-email {
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.adherent-menu {
+		position: absolute;
+		top: calc(100% + 0.4rem);
+		right: 0;
+		min-width: 180px;
+		padding: 0.35rem;
+		border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+		border-radius: var(--border05);
+		background: var(--background);
+		box-shadow: 0 8px 24px color-mix(in srgb, var(--text) 12%, transparent);
+		z-index: 20;
+	}
+
+	.adherent-menu form {
+		margin: 0;
+	}
+
+	.adherent-logout {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		width: 100%;
+		padding: 0.5rem 0.6rem;
+		border: none;
+		border-radius: var(--border05);
+		background: none;
+		font: inherit;
+		font-size: var(--small);
+		color: var(--text);
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.adherent-logout:hover {
+		background: color-mix(in srgb, var(--secondary) 12%, transparent);
+	}
+
+	.adherent-logout :global(svg) {
+		width: 1.05em;
+		height: 1.05em;
+	}
+</style>

@@ -29,9 +29,14 @@ export default defineConfig({
   },
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "hover"
+      defaultStrategy: "viewport"
   },
   site: env.CONFIG_BASE_URL || process.env.CONFIG_BASE_URL,
   output: 'server',
   adapter: netlify(),
+    vite: {
+    server: {
+      watch: { ignored: ['**/*.db*', '**/*.sqlite*'] },
+    },
+  },
 });
