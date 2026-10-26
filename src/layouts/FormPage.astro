@@ -5,6 +5,22 @@ const { title, description } = Astro.props;
 ---
  
 <Page title={title} description={description}>
-	<slot />
+	<section>
+		<div class="page-container">
+			<header>
+				<p class="eyebrow">Formulaire</p>
+				<h1>{title}</h1>
+				<p>{description}</p>
+			</header>
+
+			<slot />
+		</div>
+	</section>
 </Page>
  
+
+<style>
+	.page-container {
+		max-width: 40rem;
+	}
+</style>

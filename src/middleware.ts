@@ -1,37 +1,30 @@
 import { defineMiddleware } from 'astro:middleware';
-import { getReservationSession } from './lib/reservation-auth';
- 
-const PROTECTED_PREFIX = ['/member'];
-const PUBLIC_PREFIX = ['/member/login', '/member/logout'];
-const LOGIN_PATH = '/login';
- 
+import { getReservationSession, isAdminEmail } from './lib/memberAuth';
+
+const PROTECTED_PREFIXES = ['/adherent'];
+const PUBLIC_PREFIXES = ['/adherent/login', '/adherent/logout'];
+const LOGIN_PATH = '/adherent/login';
+const ADMIN_SUFFIXES = ['/admin', '/edit'];
+
+const matches = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
+
 export const onRequest = defineMiddleware(async (context, next) => {
-	const { pathname } = context.url;
-	for (const prefix of PUBLIC_PREFIX) {
-		if (pathname.startsWith(prefix)) {
-			return next();
-		}
-	}
-	
-	let isProtected = false;
-	for (const protectedPrefix of PROTECTED_PREFIX) {
-		if (isProtected) {
-			isProtected = pathname.startsWith(protectedPrefix) && pathname !== LOGIN_PATH;
-		}
-	}
- 
-	if (isProtected) {
-		const session = await getReservationSession(context.cookies);
- 
-		if (!session) {
-			const redirectTarget = `${LOGIN_PATH}?redirect=${encodeURIComponent(pathname + context.url.search)}`;
-            console.log(`Redirecting to login: ${redirectTarget}`);
-			return context.redirect(redirectTarget);
-		}
- 
-		context.locals.memberEmail = session;
-	}
- 
-	return next();
+	const { pathname, search } = context.url;
+
+	const isPublic = PUBLIC_PREFIXES.some((prefix) => matches(pathname, prefix));
+	const isProtected = !isPublic && PROTECTED_PREFIXES.some((prefix) => matches(pathname, prefix));
+	const isAdminProtected = ADMIN_SUFFIXES.some((suffix) => pathname.endsWith(suffix));
+	if (!isProtected) return next();
+
+	const session = await getReservationSession(context.cookies);
+	if (!session) return context.redirect(`${LOGIN_PATH}?redirect=${encodeURIComponent(pathname + search)}`);
+
+	const isAdmin = await isAdminEmail(session);
+	if (!isAdmin && isAdminProtected) return context.rewrite('/404');
+
+	context.locals.memberEmail = session;
+
+	const response = await next();
+	response.headers.set('Cache-Control', 'no-store');
+	return response;
 });
- 

@@ -1,0 +1,533 @@
+---
+import ReservationDateCard from '../../../../components/ReservationDateCard.astro'
+import AdherentPage from '../../../../layouts/AdherentPage.astro'
+import { getReservationSession } from '../../../../lib/memberAuth'
+import {
+	loadBooking,
+	dateParameter,
+	formatSlot
+} from '../../../../lib/reservations'
+import { title } from '../../../../utils/helpers'
+
+Astro.response.headers.set('Cache-Control', 'private, no-cache')
+
+const slug = Astro.params.room ?? ''
+const dateValue = Astro.params.date ?? ''
+const parsedDate = /^\d{4}-\d{2}-\d{2}$/.test(dateValue)
+	? new Date(`${dateValue}T12:00:00`)
+	: null
+if (!parsedDate || Number.isNaN(parsedDate.getTime()))
+	return new Response(null, { status: 404 })
+
+const lastDate = new Date(parsedDate)
+lastDate.setDate(parsedDate.getDate() + 45)
+
+const { rooms, getDay } = await loadBooking({
+	roomSlug: slug,
+	from: dateValue,
+	to: dateParameter(lastDate)
+})
+
+const room = rooms.find((r: { slug: string }) => r.slug === slug)
+if (!room) return new Response(null, { status: 404 })
+const memberEmail = await getReservationSession(Astro.cookies)
+
+const dateLabel: string = new Intl.DateTimeFormat('fr-FR', {
+	weekday: 'long',
+	day: 'numeric',
+	month: 'long',
+	year: 'numeric'
+}).format(parsedDate)
+const day = getDay(room, parsedDate)
+const isOpen = day.status === 'available' || day.status === 'reserved'
+const statusClass = isOpen ? day.status : day.status === 'past' ? 'past' : 'closed'
+const statusLabel = { available: 'Disponible', reserved: 'Réservée', closed: 'Indisponible', past: 'Date passée', empty: '' }[statusClass]
+const otherDates = Array.from({ length: 45 }, (_, index) => {
+	const date = new Date(parsedDate)
+	date.setDate(parsedDate.getDate() + index + 1)
+	return getDay(room, date)
+})
+	.filter((other) => other.status !== 'empty' && other.status !== 'closed' && other.status !== 'past')
+	.slice(0, 3)
+---
+
+<AdherentPage
+	title={`${room.name} - ${dateLabel}`}
+	description={`Informations sur ${room.name} le ${dateLabel}.`}
+>
+	<section>
+		<div class="reservation-detail">
+			<header class="detail-banner">
+				<div class="detail-heading">
+					<p class="eyebrow">{room.location} · {room.name}</p>
+					<h1>{title(dateLabel)}</h1>
+					<div class="detail-meta">
+						{day.time && <span>{day.time}</span>}
+						<span class:list={['status', statusClass]}>{statusLabel}</span>
+					</div>
+				</div>
+				<div
+					class="room-image-placeholder"
+					role="img"
+					aria-label={`Image de ${room.name}`}
+				>
+				</div>
+			</header>
+
+			<p data-action-status role="alert" hidden style="margin: 0; color: #b33a3a; font-size: var(--small);"></p>
+
+			<main class="detail-body">
+				{
+					isOpen ? (
+						day.slots.map(({ availability, reservation }) => {
+							const isManager = Boolean(memberEmail) && reservation?.manager === memberEmail
+							const isMember = memberEmail != null && Boolean(reservation?.members.includes(memberEmail))
+							return reservation ? (
+								<section class="reservation-info">
+									{day.slots.length > 1 && (
+										<p class="eyebrow">{formatSlot(availability)}</p>
+									)}
+									<p class="reservation-description">
+										{reservation.description}
+									</p>
+									<div class="information-list">
+										<div>
+											<span>Responsable</span>
+											<strong>{reservation.manager} {isManager && (<small>(vous)</small>)}</strong>
+											{isManager && (
+												<button
+													class="primary-button action-button"
+													type="button"
+													data-cancel-reservation
+													data-reservation-id={reservation.id}
+													data-players={reservation.members.length}
+												>
+													Annuler la réservation
+												</button>
+											)}
+										</div>
+										<div>
+											<span>Joueurs</span>
+											<strong>
+												{reservation.members.length
+													? reservation.members
+															.map((member) => (member === memberEmail ? `${member} (vous)` : member))
+															.join(', ')
+													: 'Pas de joueurs'}
+											</strong>
+											{!isManager &&
+												(isMember ? (
+													<button
+														class="primary-button action-button"
+														type="button"
+														data-leave-reservation
+														data-reservation-id={reservation.id}
+													>
+														Quitter la partie
+													</button>
+												) : (
+													<button
+														class="primary-button action-button"
+														type="button"
+														data-join-reservation
+														data-reservation-id={reservation.id}
+													>
+														Rejoindre
+													</button>
+												))}
+										</div>
+									</div>
+								</section>
+							) : (
+								<section class="reservation-info free-info">
+									{day.slots.length > 1 && (
+										<p class="eyebrow">{formatSlot(availability)}</p>
+									)}
+									<div class="information-list">
+										<div>
+											<span>Responsable</span>
+											<strong>Pas de responsable</strong>
+											<button
+												class="primary-button reserve-inline action-button"
+												type="button"
+												data-open-reservation
+												data-availability={availability.id}
+												data-slot={formatSlot(availability)}
+											>
+												Réserver
+											</button>
+										</div>
+										<div>
+											<span>Joueurs</span>
+											<strong>Pas de joueurs</strong>
+										</div>
+									</div>
+								</section>
+							)
+						})
+					) : (
+						<section class="reservation-info">
+							<strong>
+								{day.status === 'past'
+									? 'Cette date est passée.'
+									: day.closed
+										? 'La salle est fermée pendant les vacances scolaires.'
+										: 'Pas de créneau à cette date.'}
+							</strong>
+						</section>
+					)
+				}
+
+				<section class="other-dates">
+					<h4>Autres Dates</h4>
+					<div class="other-dates-list">
+						{
+							otherDates.map((other) => (
+								<ReservationDateCard
+									href={`../${room.slug}/${other.key}`}
+									dayLabel={new Intl.DateTimeFormat('fr-FR', {
+										weekday: 'short',
+										day: 'numeric',
+										month: 'short'
+									}).format(other.date)}
+									dateLabel={new Intl.DateTimeFormat('fr-FR', {
+										day: 'numeric',
+										month: 'short'
+									}).format(other.date)}
+									status={other.status}
+									description={other.description}
+									time={other.closed ? 'Vacances scolaires' : other.time}
+								/>
+							))
+						}
+					</div>
+				</section>
+			</main>
+		</div>
+	</section>
+</AdherentPage>
+
+<dialog data-reservation-dialog>
+	<form method="dialog" class="dialog-content" data-reservation-form>
+		<div class="dialog-header">
+			<p class="eyebrow">Réservation - {room.name}</p>
+			<button class="icon-button" type="button" data-close-dialog aria-label="Fermer"
+				>&times;</button
+			>
+		</div>
+		<div class="reservation-dialog-detail">
+			<h3>{title(dateLabel)}</h3>
+			<p data-dialog-slot></p>
+		</div>
+		<input type="hidden" name="availability" />
+		<input type="hidden" name="date" value={day.key} />
+		<div class="dialog-section">
+			<label for="reservation-type">Type de partie</label>
+			<select id="reservation-type" name="type" required>
+				{
+					[
+						{ value: 'jdr', label: 'Jeux de rôle' },
+						{ value: 'jds', label: 'Jeux de société' },
+						{ value: 'autre', label: 'Autre' },
+					].map((option) => (
+						<option value={option.value}>{option.label}</option>
+					))
+				}
+			</select>
+		</div>
+		<textarea
+			name="description"
+			rows="5"
+			placeholder="Description (facultatif)"></textarea>
+		<p data-booking-status role="alert" hidden style="margin: 0; color: #b33a3a; font-size: var(--small);"></p>
+		<input type="submit" class="primary-button" value="Réserver la salle"/>
+	</form>
+</dialog>
+
+<dialog data-confirm-dialog>
+	<form method="dialog" class="dialog-content">
+		<p data-confirm-message style="margin: 0;"></p>
+		<div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+			<button class="secondary-button" value="cancel" autofocus>Retour</button>
+			<button class="primary-button" value="confirm" data-confirm-accept>Confirmer</button>
+		</div>
+	</form>
+</dialog>
+
+<script>
+	import { actions, isInputError, type ActionError } from 'astro:actions'
+
+	const errorMessage = (error: ActionError) =>
+		(isInputError(error) ? Object.values(error.fields).flat()[0] : undefined) ?? error.message
+
+	const showMessage = (selector: string, text = '') => {
+		const element = document.querySelector<HTMLElement>(selector)
+		if (!element) return
+		element.textContent = text
+		element.hidden = !text
+	}
+
+	const refresh = async () => {
+		const response = await fetch(location.href, { cache: 'no-store' })
+		if (!response.ok) return location.reload()
+		const next = new DOMParser().parseFromString(await response.text(), 'text/html')
+		for (const selector of ['.detail-meta', '.detail-body']) {
+			const fresh = next.querySelector(selector)
+			if (fresh) document.querySelector(selector)?.replaceWith(fresh)
+		}
+	}
+
+	const confirmDialog = (message: string, acceptLabel = 'Confirmer', danger = false) =>
+		new Promise<boolean>((resolve) => {
+			const dialog = document.querySelector<HTMLDialogElement>('[data-confirm-dialog]')!
+			const accept = dialog.querySelector<HTMLElement>('[data-confirm-accept]')!
+			dialog.querySelector('[data-confirm-message]')!.textContent = message
+			accept.textContent = acceptLabel
+			accept.className = danger ? 'danger-button' : 'primary-button'
+			dialog.returnValue = ''
+			dialog.addEventListener('close', () => resolve(dialog.returnValue === 'confirm'), { once: true })
+			dialog.showModal()
+		})
+
+	const perform = async (button: HTMLButtonElement, request: () => Promise<{ error?: ActionError }>) => {
+		button.disabled = true
+		showMessage('[data-action-status]')
+		const { error } = await request()
+		if (error) {
+			button.disabled = false
+			return showMessage('[data-action-status]', errorMessage(error))
+		}
+		await refresh()
+	}
+
+	document.addEventListener('click', async (event) => {
+		const button = (event.target as Element).closest<HTMLButtonElement>('button')
+		if (!button) return
+		const reservationId = Number(button.dataset.reservationId)
+
+		if (button.matches('[data-open-reservation]')) {
+			const dialog = document.querySelector<HTMLDialogElement>('[data-reservation-dialog]')!
+			dialog.querySelector('[data-dialog-slot]')!.textContent = button.dataset.slot ?? ''
+			dialog.querySelector<HTMLInputElement>('input[name="availability"]')!.value = button.dataset.availability ?? ''
+			showMessage('[data-booking-status]')
+			dialog.showModal()
+		} else if (button.matches('[data-close-dialog]')) {
+			button.closest('dialog')!.close()
+		} else if (button.matches('[data-join-reservation]')) {
+			perform(button, () => actions.joinReservation({ reservationId }))
+		} else if (button.matches('[data-leave-reservation]')) {
+			if (await confirmDialog('Quitter cette partie ?', 'Quitter'))
+				perform(button, () => actions.leaveReservation({ reservationId }))
+		} else if (button.matches('[data-cancel-reservation]')) {
+			const players = Number(button.dataset.players)
+			const warning = players ? ` ${players} joueur(s) inscrit(s) seront retirés.` : ''
+			if (await confirmDialog(`Annuler cette réservation ?${warning}`, 'Annuler la réservation', true))
+				perform(button, () => actions.cancelReservation({ reservationId }))
+		}
+	})
+
+	document.addEventListener('submit', async (event) => {
+		const form = event.target as HTMLFormElement
+		if (!form.matches('[data-reservation-form]')) return
+		event.preventDefault()
+
+		const data = new FormData(form)
+		const submit = form.querySelector<HTMLInputElement>('[type="submit"]')!
+		submit.disabled = true
+		showMessage('[data-booking-status]')
+		const { error } = await actions.bookSlot({
+			availability: Number(data.get('availability')),
+			date: String(data.get('date')),
+			type: String(data.get('type')) as 'jdr' | 'jds' | 'autre',
+			description: String(data.get('description') ?? '').trim() || undefined
+		})
+		submit.disabled = false
+		if (error) return showMessage('[data-booking-status]', errorMessage(error))
+
+		form.closest('dialog')!.close()
+		form.reset()
+		await refresh()
+	})
+</script>
+
+<style>
+	.reservation-detail {
+		display: flex;
+		min-height: 70vh;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	.back-link {
+		width: fit-content;
+		color: var(--text);
+		border-bottom-color: var(--text);
+		font-size: var(--small);
+	}
+	.detail-banner {
+		position: relative;
+		display: grid;
+		min-height: 320px;
+		overflow: hidden;
+		border-radius: var(--border05);
+	}
+	.room-image-placeholder {
+		position: absolute;
+		inset: 0;
+		background: var(--light-secondary);
+	}
+	.detail-banner::after {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			180deg,
+			rgb(21 20 25 / 12%),
+			rgb(21 20 25 / 72%)
+		);
+		content: '';
+	}
+	.detail-heading {
+		z-index: 1;
+		align-self: end;
+		padding: 2rem;
+		color: #fff;
+	}
+	.detail-heading h1 {
+		margin: 0 0 1rem;
+	}
+	.detail-heading .eyebrow {
+		color: #fff;
+	}
+	.detail-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		font-size: var(--small);
+	}
+	.status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+	}
+	.status::before {
+		width: 0.65rem;
+		height: 0.65rem;
+		border-radius: 50%;
+		content: '';
+	}
+	.status.available::before {
+		background: #4c9a6b;
+	}
+	.status.reserved::before {
+		background: #d59a3a;
+	}
+	.status.closed::before {
+		background: #999;
+	}
+	.detail-body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	.reservation-info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+	.information-list {
+		display: flex;
+		flex-flow: row wrap;
+		gap: 1.5rem;
+	}
+	.information-list div {
+		display: flex;
+		flex-flow: column wrap;
+		flex: 1;
+		gap: 0.3rem;
+	}
+	.information-list span {
+		font-size: var(--small);
+		opacity: 0.7;
+	}
+	.reserve-inline {
+		width: fit-content;
+		margin-top: 0.35rem;
+	}
+	.action-section {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+	.action-context {
+		display: grid;
+		gap: 0.2rem;
+	}
+	.action-context span {
+		font-size: var(--small);
+		opacity: 0.7;
+	}
+	.other-dates {
+		margin-top: auto;
+	}
+	.section-title-row {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+	.section-title-row h3 {
+		margin: 0;
+		font-size: var(--h3);
+	}
+	.section-title-row a {
+		color: var(--text);
+		border-bottom-color: var(--text);
+		font-size: var(--small);
+	}
+	.other-dates-list {
+		display: flex;
+		gap: 0.6rem;
+	}
+	.other-dates-list a {
+		display: flex;
+		flex-flow: column nowrap;
+		gap: var(--border025);
+		flex: 1;
+		padding: 0.8rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border025);
+		color: var(--text);
+	}
+	.other-dates-list a:hover {
+		border-color: var(--secondary);
+	}
+	@media screen and (max-width: 750px) {
+		.detail-banner {
+			min-height: 240px;
+		}
+		.detail-heading {
+			padding: 1.25rem;
+		}
+		.information-list {
+			flex-flow: column wrap;
+			gap: 0.8rem;
+			min-height: 20rem;
+		}
+		.information-list div {
+			flex: unset;
+		}
+		.other-dates-list {
+			overflow-x: auto;
+			flex-direction: column;
+		}
+		.other-dates-list a {
+			min-width: 150px;
+		}
+		.action-button {
+			width: 100%;
+			padding: 1rem;
+		}
+	}
+</style>

@@ -36,7 +36,7 @@ div.blog-card {
 	background-color: color-mix(in srgb, var(--secondary) 20%, transparent);
 	display: flex;
 	flex-flow: column nowrap;
-	border-radius: 10px;
+	border-radius: var(--border05);
 	overflow: hidden;
 	height: 600px;
 	padding: 0 !important;
@@ -78,7 +78,7 @@ div.blog-card {
 	flex-flow: column nowrap;
 	gap: 1rem;
 	padding: 2rem;
-	border-radius: 10px;
+	border-radius: var(--border05);
 	height: 100%;
 }
 
@@ -105,7 +105,7 @@ div.blog-card {
 	background-color: var(--secondary);
 	color: var(--background);
 	padding: 0.25rem 0.5rem;
-	border-radius: 5px;
+	border-radius: var(--border025);
 	font-size: 0.875rem;
 }
 
@@ -128,7 +128,7 @@ div.blog-card {
 	background-color: var(--background);
 	color: var(--text-900);
 	padding: 0.25rem 0.5rem;
-	border-radius: 5px;
+	border-radius: var(--border025);
 	font-size: 0.875rem;
 	margin: 0;
 }
@@ -172,7 +172,7 @@ div.blog-card {
 	gap: 0;
 	border-color: var(--text-900);
 	border: 2px solid;
-	border-radius: 0.5rem;
+	border-radius: var(--border05);
 }
 
 .pagination > ul > li {

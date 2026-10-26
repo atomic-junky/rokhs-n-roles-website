@@ -1,6 +1,6 @@
 import { sanityClient } from 'sanity:client'
 
-export async function loadQuery({ query, params, enabled }) {
+export default async function loadQuery({ query, params, enabled }) {
 	const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLED === enabled
 
 	const token = import.meta.env.SANITY_API_READ_TOKEN

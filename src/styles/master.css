@@ -11,12 +11,16 @@
 	--margin-md: 0 6%;
 	--border1: 1rem;
 	--border05: 0.5rem;
+	--border025: 0.25rem;
 	--border-color: color-mix(in srgb, var(--text) 25%, transparent);
 
 	--wrapper-height: 85vh;
 	--image-max-width: 320px;
 
 	--font-family: 'Lucida Sans';
+	
+	--light-factor: 12%;
+	--light-secondary: color-mix(in srgb, var(--secondary) var(--light-factor), transparent);
 }
 
 @media screen and (max-width: 1200px) {
@@ -265,7 +269,7 @@ textarea, input, select {
 	width: 100%;
 	padding: 0.7rem;
 	border: 1px solid var(--border-color);
-	border-radius: 0.25rem;
+	border-radius: var(--border025);
 	color: var(--text);
 	background: var(--background);
 }
@@ -373,7 +377,7 @@ input[readonly] {
 }
 
 #header .header-content>* {
-	min-width: 250px;
+	min-width: 500px;
 }
 
 #header .title-link {
@@ -432,15 +436,31 @@ input[readonly] {
 
 #header .join-container {
 	display: flex;
-	justify-content: center;
-	align-items: end;
-	flex-direction: column;
+	justify-content: end;
+	align-items: center;
+	flex-direction: row;
 	padding: 0 20px;
+	gap: 10px;
 }
 
 #header .menu-icon,
 #header .header-link-join {
 	display: none;
+}
+
+.page-container {
+	display: grid;
+	gap: 2rem;
+}
+
+.page-container > header {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.page-container > header h1,
+.page-container > header p {
+	margin: 0;
 }
 
 .eyebrow {
@@ -631,6 +651,8 @@ ul.contact-list>li>i {
 	width: 100%;
 }
 
+/* Page container */
+
 /* Dialog */
 dialog {
 	width: min(480px, calc(100% - 2rem));
@@ -694,7 +716,18 @@ dialog > form button[value='confirm'] {
 	width: 100%;
 }
 
-@media screen and (max-width: 975px) {
+@media screen and (max-width: 1600px) {
+	#header .header-content > * {
+		min-width: 0;
+	}
+
+	.title-label {
+		white-space: nowrap;
+		overflow: hidden;
+	}
+}
+
+@media screen and (max-width: 1200px) {
 	.main__content {
 		width: 100%;
 		display: flex;
@@ -714,12 +747,24 @@ dialog > form button[value='confirm'] {
 		width: 100%;
 	}
 
-	#header .title-label {
+	#header .title-container {
 		display: none;
 	}
 
 	#header .header-content>* {
 		min-width: auto;
+	}
+
+	.join-container {
+		min-width: 100%;
+	}
+
+	#header .title-label {
+		display: none;
+	}
+
+	#header .header-links {
+		margin: 0;
 	}
 
 	#footer .footer-links,
@@ -729,13 +774,9 @@ dialog > form button[value='confirm'] {
 }
 
 @media screen and (max-width: 750px) {
-	#header {
-		height: auto;
-	}
-
 	#header .title-container {
-		padding: 0 75px 0 20px;
-		margin: 0;
+		padding: 0 20px;
+		align-items: center;
 	}
 
 	#header .title-link {
@@ -743,41 +784,42 @@ dialog > form button[value='confirm'] {
 	}
 
 	#header .title-label {
-		display: block !important;
-		width: 100%;
+		display: flex;
 		text-align: center;
 	}
 
 	#menu {
-		flex-flow: column wrap !important;
+		flex-flow: row nowrap;
 	}
 
 	#header .title-container {
 		min-height: 70px;
-	}
-
-	#header .title-label {
-		display: none;
+		display: flex;
+		flex-flow: row nowrap;
 	}
 
 	#header a.menu-icon {
 		display: flex;
-		width: auto;
-		position: absolute;
+		width: fit-content;
 		right: 0;
 		top: 0;
 		background-color: transparent;
 	}
 
 	#header .header-links {
+		position: absolute;
+		top: 70px;
 		transform: none;
 		align-items: start;
+		width: fit-content;
 	}
 
 	#header .header-link-join {
 		justify-content: center;
 		align-items: center;
+		gap: 10px;
 		padding: 0 30px;
+		flex-flow: row wrap;
 	}
 
 	#header .join-container {

@@ -1,7 +1,7 @@
 import { eq, and, gte, lte } from 'drizzle-orm';
 import { db } from './db/client';
 import { rooms as roomsTable, roomAvailabilities, reservations as reservationsTable } from './db/schema';
-import { getSchoolHolidays, isSchoolHoliday, isSchoolHolidayMDC } from './school-holidays';
+import { getSchoolHolidays, isSchoolHoliday, isSchoolHolidayMDC } from './schoolHolidays';
 
 export type Room = typeof roomsTable.$inferSelect;
 export type Availability = typeof roomAvailabilities.$inferSelect;
@@ -47,22 +47,29 @@ export async function loadBooking({ from, to, roomSlug }: LoadOptions) {
 		const key = dateParameter(date);
 		const openSlots = weeklySlots(room).filter((s) => s.weekday === weekdayOf(date));
 		const past = key < dateParameter(new Date());
-		let closed = openSlots.length > 0 && room.schoolCalendar && isSchoolHoliday(key, holidays);
-		if (room.location.toLowerCase() === 'mdc')
-			closed = isSchoolHolidayMDC(key, Math.max(...openSlots.map((s) => s.endMinute)), holidays);
-		const slots: DaySlot[] = closed
-			? []
-			: openSlots.map((availability) => ({ availability, reservation: reservationByKey.get(`${availability.id}|${key}`) }));
+		const isMdc = room.location.toLowerCase() === 'mdc';
+
+		const isClosed = (slot: Availability) =>
+			isMdc
+				? isSchoolHolidayMDC(key, slot.startMinute, slot.endMinute, holidays)
+				: room.schoolCalendar && isSchoolHoliday(key, holidays);
+
+		const bookable = openSlots.filter((slot) => !isClosed(slot));
+		const closed = openSlots.length > 0 && bookable.length === 0;
+		const slots: DaySlot[] = bookable.map((availability) => ({
+			availability,
+			reservation: reservationByKey.get(`${availability.id}|${key}`),
+		}));
 
 		const status: DayStatus = openSlots.length === 0
 			? 'empty'
 			: past
 				? 'past'
 				: closed
-			? 'closed'
-				: slots.every((s) => s.reservation)
-					? 'reserved'
-					: 'available';
+					? 'closed'
+					: slots.every((s) => s.reservation)
+						? 'reserved'
+						: 'available';
 		const descriptions = slots.flatMap((s) => (s.reservation ? [s.reservation.description] : []));
 
 		return {

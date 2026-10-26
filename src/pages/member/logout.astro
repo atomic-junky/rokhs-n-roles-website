@@ -1,8 +1,0 @@
----
-import { clearSessionCookie } from '../../lib/reservation-auth';
-
-clearSessionCookie(Astro.cookies);
-Astro.response.headers.set('Cache-Control', 'no-store');
-
-Astro.redirect('/');
----

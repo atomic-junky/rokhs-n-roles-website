@@ -1,0 +1,11 @@
+---
+import { clearSessionCookie } from '../../lib/memberAuth';
+
+if (Astro.response.status === 200) {
+    clearSessionCookie(Astro.cookies);
+    Astro.response.headers.set('Cache-Control', 'no-store');
+    
+    return Astro.redirect('/');
+} 
+
+---

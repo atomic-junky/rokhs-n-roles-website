@@ -48,20 +48,15 @@ export function isSchoolHoliday (day: string, holidays: Holiday[]) {
 	return _isSchoolHolidayCommon(day, holidays);
 }
 
-export function isSchoolHolidayMDC (day: string, end_minute: number, holidays: Holiday[]) {
-	// Horraires MDC pendant les vacances scolaires : 9h-18h en semaine, fermée le week-end
-	const date = new Date(day);
-	const isSchoolHoliday: boolean = _isSchoolHolidayCommon(day, holidays);
+export function isSchoolHolidayMDC(day: string, startMinute: number, endMinute: number, holidays: Holiday[]) {
+	const MDC_OPEN = 9 * 60;
+	const MDC_CLOSE = 18 * 60;
 
-	const isWeekend = date.getDay() === 0 || date.getDay() === 6; // 0 = Sunday, 6 = Saturday
-	if (isWeekend)
-		return isSchoolHoliday;
+	if (!_isSchoolHolidayCommon(day, holidays)) return false;
 
-	if (isSchoolHoliday) {
-		if (end_minute <= 18 * 60) {
-			return true;
-		}
-	}
+	const weekday = new Date(`${day}T12:00:00`).getDay();
+	const isWeekend = weekday === 0 || weekday === 6;
+	if (isWeekend) return true;
 
-	return false;
+	return startMinute < MDC_OPEN || endMinute > MDC_CLOSE;
 }

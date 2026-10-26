@@ -1,0 +1,107 @@
+---
+import FormPage from '../../../layouts/FormPage.astro';
+---
+
+<FormPage title="Formulaire de présences">
+	<form id="session-form">
+		<div class="form-header">
+			<label>
+				Nom de la salle
+				<input type="text" name="roomName" placeholder="Salle 202" required/>
+			</label>
+
+			<label>
+				Heure d'arrivée
+				<input type="time" name="sessionStart" required/>
+			</label>
+		</div>
+
+		<label>
+			Responsable de session
+			<input type="text" name="responsible" required placeholder="Jessica A."/>
+		</label>
+
+		<label>
+			Liste des participants présents
+			<textarea name="participants" rows="8" required placeholder="Paul A.&#10;Vladimir H.&#10;etc."></textarea>
+		</label>
+
+		<input type="submit" class="primary-button" value="Enregistrer" />
+	</form>
+
+	<p id="form-message" style="margin-top: 1rem; font-weight: bold;"></p>
+
+	<div id="recap" hidden style="margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem;">
+		<h2>Récapitulatif enregistré</h2>
+		<p><strong>Responsable :</strong> <span id="recap-responsible"></span></p>
+		<p><strong>Heure de validation :</strong> <span id="recap-time"></span></p>
+		<p><strong>Participants (<span id="recap-count"></span>) :</strong></p>
+		<ul id="recap-list"></ul>
+	</div>
+</FormPage>
+
+<script>
+	import { actions } from 'astro:actions';
+
+	const form = document.getElementById('session-form') as HTMLFormElement;
+	const message = document.getElementById('form-message')!;
+	const recap = document.getElementById('recap')!;
+
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		message.textContent = 'Enregistrement…';
+
+		const { data, error } = await actions.registerSession(new FormData(form));
+
+		if (error) {
+			message.textContent = error.message;
+			return;
+		}
+
+		if (data?.success && data.session) {
+			message.textContent = 'Session validée et enregistrée !';
+			
+			document.getElementById('recap-responsible')!.textContent = data.session.responsible;
+			document.getElementById('recap-time')!.textContent = data.session.submittedAt;
+			document.getElementById('recap-count')!.textContent = data.session.participants.length.toString();
+
+			const listEl = document.getElementById('recap-list')!;
+			listEl.innerHTML = data.session.participants.map((p) => `<li>${p}</li>`).join('');
+
+			recap.hidden = false;
+			form.reset();
+		}
+	});
+</script>
+
+<style>
+	section {
+		align-items: start;
+	}
+	#session-form {
+		display: flex;
+		flex-flow: column nowrap;
+		gap: 1rem;
+	}
+
+	.form-header {
+		display: flex;
+		flex-flow: row wrap;
+		gap: 1rem;
+	}
+
+	.form-header > * {
+		flex: 1;
+	}
+
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	input {
+		width: 100%;
+		flex: 1;
+	}
+</style>

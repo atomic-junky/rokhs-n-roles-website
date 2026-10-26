@@ -6,10 +6,11 @@ import HeaderLink from '../components/HeaderLink.astro';
 import JoinButton from '../components/JoinButton.astro';
 import AdherentWidget from '../components/AdherentWidget.astro';
 import { SITE_TITLE } from '../consts';
-import { loadQuery } from "../lib/load-query";
-import { getReservationSession } from '../lib/reservation-auth';
+import loadQuery from "../lib/loadQuery";
+import { getReservationSession } from '../lib/memberAuth';
 
 import logo from '../assets/rnr_logo.svg';
+import LoginButton from "./LoginButton.astro";
 
 let enabled
 const referrer = Astro.url.href
@@ -39,6 +40,9 @@ const memberEmail = await getReservationSession(Astro.cookies);
 				<Image class="header-img" src={logo} alt="Logo de Rokhs & Rôles" height={35} />
 				<span class="title-label">{SITE_TITLE}</span>
 			</a>
+			<a class="menu-icon" onclick="toggleMenu()">
+				<Icon aria-hidden="true" name="lucide:menu"/>
+			</a>
 		</div>
 
 		<div class="header-links" id="navbar">
@@ -59,18 +63,17 @@ const memberEmail = await getReservationSession(Astro.cookies);
 						<span class="adherent-email">{memberEmail}</span>
 					</div>
 				) : (
+					<LoginButton/>
 					<JoinButton />
 				)}
 			</div>
-			<a class="menu-icon" onclick="toggleMenu()">
-				<Icon aria-hidden="true" name="lucide:menu"/>
-			</a>
 		</div>
 
 		<div class="join-container header-right" transition:persist>
 			{memberEmail ? (
-				<AdherentWidget email={memberEmail} />
+				<AdherentWidget/>
 			) : (
+				<LoginButton/>
 				<JoinButton />
 			)}
 		</div>
@@ -96,9 +99,9 @@ const memberEmail = await getReservationSession(Astro.cookies);
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem 0.9rem;
-		border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+		border: 1px solid var(--secondary);
 		border-radius: var(--border05);
-		background: color-mix(in srgb, var(--secondary) 10%, var(--background));
+		background: var(--light-secondary);
 		font-size: var(--small);
 		font-weight: 600;
 		color: var(--text);

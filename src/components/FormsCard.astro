@@ -1,0 +1,36 @@
+---
+type Props = {
+	slug: string;
+	title: string;
+};
+
+const { slug, title } = Astro.props;
+---
+
+<div class="forms-card-container">
+	<a class="forms-card" href={`/adherent/forms/${slug}`}>
+		<h3>{title}</h3>
+	</a>
+</div>
+
+<style>
+	.forms-card-container {
+		width: 100%;
+	}
+	.forms-card {
+		display: flex;
+		justify-content: start;
+		align-items: center;
+		width: 100%;
+		padding: 1rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border05);
+		background: var(--light-secondary);
+		color: var(--text);
+		text-decoration: none;
+	}
+	.forms-card h3 {
+		margin: 0;
+		text-align: center;
+	}
+</style>

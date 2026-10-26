@@ -1,0 +1,164 @@
+---
+import Page from '../../layouts/Page.astro'
+import { actions } from 'astro:actions'
+import { getReservationSession } from '../../lib/memberAuth'
+
+const redirect = Astro.url.searchParams.get('redirect') || '/adherent'
+
+if (await getReservationSession(Astro.cookies)) {
+	return Astro.redirect(redirect)
+}
+---
+
+<Page
+	title="Connexion réservation"
+	description="Connexion réservée aux adhérents."
+>
+	<section>
+		<div class="login-page">
+			<h1>Se connecter</h1>
+			<p>
+				Cet espace est accessible uniquement aux adhérents. Entrez votre e-mail pour recevoir un code de connexion.
+			</p>
+
+			<form
+				id="email-form"
+				class="login-form"
+				action={actions.sendVerificationEmail}
+			>
+				<label
+					>Email adhérent<input
+						name="email"
+						type="email"
+						autocomplete="email"
+						required
+						placeholder="vous@example.com"
+					/></label
+				>
+				<button class="primary-button" type="submit">Recevoir un code</button>
+			</form>
+
+			<form
+				id="code-form"
+				class="login-form"
+				action={actions.verifyLoginCode}
+				data-redirect={redirect}
+				hidden
+			>
+				<label
+					>Code reçu par email<input
+						name="code"
+						inputmode="numeric"
+						autocomplete="one-time-code"
+						pattern="[0-9]{6}"
+						required
+						placeholder="123456"
+					/></label
+				>
+				<button class="primary-button" type="submit">Se connecter</button>
+			</form>
+			<p class="form-message" id="form-message" role="status"></p>
+		</div>
+	</section>
+</Page>
+
+<script>
+	import { actions } from 'astro:actions'
+
+	const emailForm = document.getElementById('email-form') as HTMLFormElement
+	const codeForm = document.getElementById('code-form') as HTMLFormElement
+	const message = document.getElementById('form-message')!
+
+	function setMessage(text: string) {
+		message.textContent = text
+	}
+
+	function setPending(form: HTMLFormElement, pending: boolean) {
+		form.querySelector('button')!.disabled = pending
+	}
+
+	emailForm.addEventListener('submit', async (e) => {
+		e.preventDefault()
+		setPending(emailForm, true)
+		setMessage('Envoi du code…')
+
+		const { error, data } = await actions.sendVerificationEmail(
+			new FormData(emailForm)
+		)
+
+		setPending(emailForm, false)
+
+		if (error) {
+			setMessage(error.message)
+			return
+		}
+
+		setMessage(data.message)
+		emailForm.hidden = true
+		codeForm.hidden = false
+		codeForm.querySelector('input')?.focus()
+	})
+
+	codeForm.addEventListener('submit', async (e) => {
+		e.preventDefault()
+		setPending(codeForm, true)
+		setMessage('Vérification…')
+
+		try {
+			const { error, data } = await actions.verifyLoginCode(
+				new FormData(codeForm)
+			)
+
+			if (error) {
+				setMessage(error.message)
+				return
+			}
+
+			setMessage(data.message)
+			window.location.assign(codeForm.dataset.redirect || '/adherent')
+		} catch (err) {
+			console.error('Erreur inattendue lors de la vérification du code:', err)
+			setMessage("Une erreur inattendue s'est produite, réessaie.")
+		} finally {
+			setPending(codeForm, false)
+		}
+	})
+</script>
+
+<style>
+	.login-page {
+		max-width: 520px;
+		margin: 0 auto;
+		padding: 5rem 1.5rem;
+	}
+	.login-page h1 {
+		margin: 0 0 1rem;
+	}
+	.login-page > p {
+		margin-left: 0;
+	}
+	.login-form {
+		display: grid;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+	.login-form label {
+		display: grid;
+		gap: 0.45rem;
+		font-weight: 600;
+	}
+	.login-form input {
+		width: 100%;
+		padding: 0.75rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border025);
+		background: var(--background);
+		color: var(--text);
+		font: inherit;
+	}
+	.form-message {
+		min-height: 1.5rem;
+		margin: 1rem 0 0;
+		font-size: var(--small);
+	}
+</style>

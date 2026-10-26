@@ -38,10 +38,10 @@ const hours = [...new Set(weeklySlots(room).map(formatSlot))].join(' · ');
 ---
 
 <AdherentPage title={room.name} description={`Voir les dates disponibles pour ${room.name}.`}>
-	<div class="room-page">
+	<div class="page-container">
 		<a class="back-link" href="/reservations">&larr; Retour aux salles</a>
 
-		<header class="room-header">
+		<header>
 			<div>
 				<p class="eyebrow">{room.location}</p>
 				<h1>{room.name}</h1>
@@ -125,9 +125,9 @@ const hours = [...new Set(weeklySlots(room).map(formatSlot))].join(' · ');
 
 	.calendar-wrap {
 		padding: 1rem;
-		border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border05);
-		background: color-mix(in srgb, var(--background) 88%, var(--secondary));
+		background: var(--light-secondary);
 	}
 
 	.weekday-headings,
@@ -152,16 +152,16 @@ const hours = [...new Set(weeklySlots(room).map(formatSlot))].join(' · ');
 		gap: 0.5rem;
 		min-height: 105px;
 		padding: 0.75rem;
-		border: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
-		border-radius: 0.25rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border025);
 		background: var(--background);
 		color: var(--text);
 		width: 100%;
 	}
 
 	.month-day.available { border-left: 4px solid #4c9a6b; }
-	.month-day.reserved { border-left: 4px solid #d59a3a; background: color-mix(in srgb, #d59a3a 9%, var(--background)); }
-	.month-day.closed { border-left: 4px solid #d53a3a; background: color-mix(in srgb, #d53a3a 9%, var(--background)); }
+	.month-day.reserved { border-left: 4px solid #d59a3a; background: color-mix(in srgb, #d59a3a var(--light-factor), transparent); }
+	.month-day.closed { border-left: 4px solid #d53a3a; background: color-mix(in srgb, #d53a3a var(--light-factor), transparent); }
 	.month-day:hover { border-color: var(--secondary); }
 	.month-day.empty { opacity: 0.35; }
 	.month-day.past { opacity: 0.35; }

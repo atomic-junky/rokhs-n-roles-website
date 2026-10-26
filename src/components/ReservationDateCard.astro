@@ -25,10 +25,6 @@ const classes = ['reservation-date-card', status, compact && 'compact'];
 ) : (
 	<div class:list={classes}>
 		<small>{dateLabel}</small>
-		{status === 'available' && <small>Disponible{time ? ` · ${time}` : ''}</small>}
-		{status === 'reserved' && <small>{description}</small>}
-        {status === 'closed' && <small>Vacances scolaires</small>}
-        {status === 'past' && <small>Date passée</small>}
 	</div>
 )}
 
@@ -39,8 +35,8 @@ const classes = ['reservation-date-card', status, compact && 'compact'];
         gap: 0.4rem;
         min-height: 105px;
         padding: 0.75rem;
-        border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
-        border-radius: 0.25rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border025);
         background: var(--background);
         color: var(--text);
         width: 100%;
@@ -55,16 +51,16 @@ const classes = ['reservation-date-card', status, compact && 'compact'];
     }
     .reservation-date-card.reserved {
         border-left: 4px solid #d59a3a;
-        background: color-mix(in srgb, #d59a3a 9%, var(--background));
+        background: color-mix(in srgb, #d59a3a var(--light-factor), var(--background));
     }
     .reservation-date-card.closed {
         border-left: 4px solid #d53a3a;
-        background: color-mix(in srgb, #d53a3a 8%, var(--background));
+        background: color-mix(in srgb, #d53a3a var(--light-factor), var(--background));
         opacity: 0.7;
     }
     .reservation-date-card.past {
         border-left: 4px solid #999;
-        background: color-mix(in srgb, #999 5%, var(--background));
+        background: color-mix(in srgb, #999 var(--light-factor), var(--background));
         opacity: 0.5;
     }
     .reservation-date-card.empty, .reservation-date-card.past {

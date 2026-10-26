@@ -13,6 +13,11 @@ interface ImportMetaEnv {
   readonly RESERVATION_ADMIN_EMAILS: string;
   readonly RESEND_API_KEY: string;
   readonly RESEND_FROM_EMAIL: string;
+  readonly HELLOASSO_API_ENDPOINT: string;
+  readonly HELLOASSO_CLIENT_ID: string;
+  readonly HELLOASSO_CLIENT_SECRET: string;
+  readonly HELLOASSO_ENDPOINT: string;
+  readonly HELLOASSO_ORGANIZATION_SLUG: string;
 }
 
 interface ImportMeta {

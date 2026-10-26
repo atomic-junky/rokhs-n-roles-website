@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { toHTML } from '@portabletext/to-html';
-import { loadQuery } from './lib/load-query';
+import loadQuery from './lib/loadQuery';
 import { getSanityImageURL } from './utils/helpers';
 import { rssSchema } from '@astrojs/rss';
 

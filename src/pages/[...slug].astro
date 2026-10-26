@@ -1,15 +1,9 @@
 ---
 import Page from '../layouts/Page.astro';
-import { loadQuery } from "../lib/load-query";
+import loadQuery from "../lib/loadQuery";
 import PortableText from '../components/SanityPortableText.astro';
 
 var { slug } = (Astro.params ?? "")
-const normalizedSlug = slug?.replaceAll('/', '')
-
-if (normalizedSlug === 'reservations') {
-    return Astro.rewrite('/reservations');
-}
-
 Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=3600');
 
 let enabled

@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import icon from "astro-icon";
 import sanity from '@sanity/astro';
 import react from '@astrojs/react';
@@ -37,6 +37,18 @@ export default defineConfig({
     vite: {
     server: {
       watch: { ignored: ['**/*.db*', '**/*.sqlite*'] },
+    },
+  },
+  env: {
+    schema: {
+      HELLOASSO_ORGANIZATION_SLUG: envField.string({ context: 'server', access: 'public' }),
+      HELLOASSO_API_ENDPOINT: envField.string({ context: 'server', access: 'public' }),
+      HELLOASSO_CLIENT_ID: envField.string({ context: 'server', access: 'secret' }),
+      HELLOASSO_CLIENT_SECRET: envField.string({ context: 'server', access: 'secret' }),
+
+      RESERVATION_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
+      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
+      RESEND_FROM_EMAIL: envField.string({ context: 'server', access: 'secret' }),
     },
   },
 });

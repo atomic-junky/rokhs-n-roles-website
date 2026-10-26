@@ -1,11 +1,12 @@
 import type { AstroCookies } from 'astro';
-
-const HELLOASSO_BEARER_TOKEN = import.meta.env.HELLOASSO_BEARER_TOKEN;
+import { RESERVATION_AUTH_SECRET } from 'astro:env/server';
+import { getHelloAssoMemberships } from '../utils/helloasso';
 
 const SESSION_COOKIE = 'reservation_session';
 const CHALLENGE_COOKIE = 'reservation_challenge';
 const SESSION_TTL = 60 * 60 * 24 * 14; // 14 jours
 const CHALLENGE_TTL = 60 * 10; // 10 minutes
+const ORGANIZATION_EMAIL = "rokhsnroles@gmail.com";
 
 const cookieOptions = {
 	httpOnly: true,
@@ -17,13 +18,11 @@ const cookieOptions = {
 const encode = (value: string) => btoa(value).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 const decode = (value: string) => atob(value.replaceAll('-', '+').replaceAll('_', '/') + '='.repeat((4 - value.length % 4) % 4));
 
-// La clé HMAC est mise en cache : pas besoin de la réimporter à chaque appel.
+// La clé HMAC est mise en cache
 let cachedKey: Promise<CryptoKey> | null = null;
 function getKey() {
 	if (!cachedKey) {
-		const secret = import.meta.env.RESERVATION_AUTH_SECRET;
-		if (!secret) throw new Error('RESERVATION_AUTH_SECRET is not configured');
-		cachedKey = crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+		cachedKey = crypto.subtle.importKey('raw', new TextEncoder().encode(RESERVATION_AUTH_SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
 	}
 	return cachedKey;
 }
@@ -54,56 +53,15 @@ export function normalizeEmail(email: string) {
 	return email.trim().toLowerCase();
 }
 
-export async function getFormSlug() {
-    const url: string = `https://api.helloasso.com/v5/directory/forms`;
-    const options = {
-        method: 'POST',
-        headers: {'content-type': 'application/json-patch+json', accept: 'application/json'},
-        body: '{"formTypes":["Membership"]}',
-        authorization: 'Bearer ' + HELLOASSO_BEARER_TOKEN
-    };
+export async function isMemberFromEmail(email: string) {
+	if (email === ORGANIZATION_EMAIL) return true;
 
-    fetch(url, options)
-        .then(res => res.json())
-        .then(res => {
-			const data = res.data[0];
-			const record = data.record;
-			const formSlug = record.slug;
-
-			return formSlug;
-		})
-        .catch(err => console.error(err));
-}
-
-export function isMemberEmail(email: string) {
-    return true;
-    
-    const organizationSlug = import.meta.env.HELLOASSO_ORGANIZATION_SLUG;
-    const formType = 'form';
-    const formSlug = getFormSlug();
-    const url: string = `https://api.helloasso.com/v5/organizations/${organizationSlug}/forms/${formType}/${formSlug}/payments?userSearchKey=${email}&states=Authorized&states=Registered`;
-    const options = {
-        method: 'GET',
-        headers: {'content-type': 'application/json-patch+json', accept: 'application/json'},
-        authorization: 'Bearer ' + HELLOASSO_BEARER_TOKEN
-    };
-
-    fetch(url, options)
-        .then(res => res.json())
-        .then(res => {
-			const payments = res.data;
-			if (payments.length > 0) {
-				return true;
-			}
-		})
-        .catch(err => console.error(err));
-    
-	return false;
+	const membershipsPayment = await getHelloAssoMemberships(email);
+	return membershipsPayment.length > 0;
 }
 
 export function isAdminEmail(email: string) {
-	const allowed = (import.meta.env.RESERVATION_ADMIN_EMAILS || '').split(',').map(normalizeEmail).filter(Boolean);
-	return allowed.includes(normalizeEmail(email));
+	return email == ORGANIZATION_EMAIL
 }
 
 // A challenge is a temporary token that allows the user to prove they received the code sent by email.

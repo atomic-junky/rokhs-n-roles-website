@@ -1,12 +1,8 @@
 ---
-import { actions } from 'astro:actions';
 import { Icon } from 'astro-icon/components';
+import { getReservationSession } from '../lib/memberAuth';
 
-interface Props {
-	email: string;
-}
-
-const { email } = Astro.props;
+const memberEmail = await getReservationSession(Astro.cookies);
 ---
 
 <div class="adherent-widget" data-adherent-widget>
@@ -19,29 +15,31 @@ const { email } = Astro.props;
 		data-adherent-trigger
 	>
 		<Icon aria-hidden="true" name="lucide:user" />
-		<span class="adherent-email">{email}</span>
+		<span class="adherent-email">{memberEmail}</span>
 		<Icon aria-hidden="true" name="lucide:chevron-down" class="adherent-chevron" />
 	</button>
 
 	<div class="adherent-menu" hidden data-adherent-menu>
-		<form method="POST" action={actions.logout} data-logout-form>
-			<button type="submit" class="adherent-logout">
+		<a href="/adherent/" class="adherent-link" data-astro-prefetch="false">
+			<button type="submit" class="adherent-button">
+				Espace adhérent
+			</button>
+		</a>
+		<a href="/adherent/logout" class="adherent-link" data-astro-prefetch="false">
+			<button type="submit" class="adherent-button">
 				<Icon aria-hidden="true" name="lucide:log-out" />
 				Se déconnecter
 			</button>
-		</form>
+		</a>
 	</div>
 </div>
 
 <script>
-	import { actions } from 'astro:actions';
-
 	document.querySelectorAll<HTMLElement>('[data-adherent-widget]').forEach((widget) => {
 		const trigger = widget.querySelector<HTMLButtonElement>('[data-adherent-trigger]');
 		const menu = widget.querySelector<HTMLElement>('[data-adherent-menu]');
-		const logoutForm = widget.querySelector<HTMLFormElement>('[data-logout-form]');
 
-		if (!trigger || !menu || !logoutForm) return;
+		if (!trigger || !menu) return;
 
 		const closeMenu = () => {
 			menu.hidden = true;
@@ -65,12 +63,6 @@ const { email } = Astro.props;
 		document.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') closeMenu();
 		});
-
-		logoutForm.addEventListener('submit', async (e) => {
-			e.preventDefault();
-			await actions.logout(new FormData(logoutForm));
-			window.location.href = '/';
-		});
 	});
 </script>
 
@@ -84,9 +76,9 @@ const { email } = Astro.props;
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem 0.9rem;
-		border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border05);
-		background: color-mix(in srgb, var(--secondary) 10%, var(--background));
+		background: var(--light-secondary);
 		font: inherit;
 		font-size: var(--small);
 		font-weight: 600;
@@ -115,21 +107,17 @@ const { email } = Astro.props;
 	.adherent-menu {
 		position: absolute;
 		top: calc(100% + 0.4rem);
-		right: 0;
-		min-width: 180px;
+		left: 0;
+		width: 100%;
 		padding: 0.35rem;
-		border: 1px solid color-mix(in srgb, var(--text) 15%, transparent);
+		border: 1px solid var(--border-color);
 		border-radius: var(--border05);
 		background: var(--background);
-		box-shadow: 0 8px 24px color-mix(in srgb, var(--text) 12%, transparent);
+		box-shadow: 0 8px 24px var(--border-color);
 		z-index: 20;
 	}
 
-	.adherent-menu form {
-		margin: 0;
-	}
-
-	.adherent-logout {
+	.adherent-button {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
@@ -145,11 +133,11 @@ const { email } = Astro.props;
 		cursor: pointer;
 	}
 
-	.adherent-logout:hover {
-		background: color-mix(in srgb, var(--secondary) 12%, transparent);
+	.adherent-button:hover {
+		background: var(--light-secondary);
 	}
 
-	.adherent-logout :global(svg) {
+	.adherent-button :global(svg) {
 		width: 1.05em;
 		height: 1.05em;
 	}

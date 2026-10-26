@@ -18,8 +18,8 @@ const slotsByRoom = new Map(
 	eyebrow="Administration"
 >
 	<section>
-		<div class="editor-page">
-			<header class="editor-header">
+		<div class="page-container">
+			<header>
 				<div>
 					<h1>Salles et créneaux</h1>
 					<p>Modifiez les salles et leurs disponibilités.</p>
@@ -194,26 +194,6 @@ const slotsByRoom = new Map(
 </script>
 
 <style is:global>
-.editor-page {
-	display: grid;
-	gap: 2rem;
-	min-width: 0;
-}
-.editor-header {
-	display: flex;
-	flex-flow: row wrap;
-	align-items: end;
-	justify-content: space-between;
-	gap: 2rem;
-}
-.editor-header > div {
-	display: grid;
-	gap: 0.5rem;
-}
-.editor-header h1,
-.editor-header p {
-	margin: 0;
-}
 .room-list {
 	display: grid;
 	gap: 1.25rem;
@@ -222,7 +202,7 @@ const slotsByRoom = new Map(
 	min-width: 0;
 	border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
 	border-radius: var(--border05);
-	background: color-mix(in srgb, var(--background) 90%, var(--secondary));
+	background: var(--light-secondary);
 }
 .room-summary {
 	display: flex;
@@ -258,7 +238,6 @@ const slotsByRoom = new Map(
 .room-fields {
 	display: flex;
 	flex-flow: row wrap;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
 	align-items: start;
 	gap: 1rem;
 }
@@ -290,14 +269,14 @@ const slotsByRoom = new Map(
 	gap: 0.75rem;
 	padding: 0.9rem;
 	border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
-	border-radius: 0.25rem;
+	border-radius: var(--border025);
 	background: var(--background);
 }
 .field-group {
 	display: flex;
 	flex: 1;
 	flex-flow: column nowrap;
-	gap: 0.25rem;
+	gap: var(--border025);
 	width: 100%;
 	height: 100%;
 }

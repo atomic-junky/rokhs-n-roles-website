@@ -22,27 +22,22 @@ export default function createPreviewContent(text, maxLength = 150) {
     let lastIndex = 0;
     let currentLength = 0;
 
-    // Iterate over the matches
     while ((match = sentenceEndings.exec(text)) !== null) {
         const sentence = text.substring(lastIndex, sentenceEndings.lastIndex).trim();
         const newLength = currentLength + sentence.length;
 
-        // Check if adding the sentence would exceed the max length
         if (newLength > maxLength) {
             break;
         }
 
-        // Add the sentence to the sentences array
         sentences.push(sentence);
         currentLength = newLength;
         lastIndex = sentenceEndings.lastIndex;
     }
 
-    // If no full sentences were added and some text remains, add the remaining text
     if (sentences.length === 0 && lastIndex < text.length) {
         sentences.push(text.substring(0, maxLength).trim());
     }
 
-    // Join the collected sentences back into a single string
     return sentences.join(' ');
 }

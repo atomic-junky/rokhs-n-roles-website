@@ -1,0 +1,268 @@
+---
+import AdherentPage from '../../../layouts/AdherentPage.astro'
+import ReservationDateCard from '../../../components/ReservationDateCard.astro'
+import { loadBooking, dateParameter, weekdayOf } from '../../../lib/reservations'
+
+const requestedWeek = Astro.url.searchParams.get('week')
+const parsedDate = requestedWeek
+	? new Date(`${requestedWeek}T12:00:00`)
+	: new Date()
+const selectedDate = Number.isNaN(parsedDate.getTime())
+	? new Date()
+	: parsedDate
+const monday = new Date(selectedDate)
+const dayOfWeek = monday.getDay() || 7
+monday.setDate(monday.getDate() - dayOfWeek + 1)
+const previousWeek = new Date(monday)
+previousWeek.setDate(monday.getDate() - 7)
+const nextWeek = new Date(monday)
+nextWeek.setDate(monday.getDate() + 7)
+
+const today = new Date()
+today.setHours(12, 0, 0, 0)
+const todayDayOfWeek = today.getDay() || 7
+today.setDate(today.getDate() - todayDayOfWeek + 1)
+const weeks = Array.from({ length: 8 }, (_, index) => {
+	const weekStart = new Date(today)
+	weekStart.setDate(today.getDate() + index * 7)
+	const weekEnd = new Date(weekStart)
+	weekEnd.setDate(weekStart.getDate() + 6)
+	return {
+		start: weekStart,
+		end: weekEnd,
+		label: `${new Intl.DateTimeFormat('fr-FR', { day: 'numeric'}).format(
+			weekStart
+		)} - ${new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' }).format(
+			weekEnd
+		)}`
+	}
+})
+
+const calendarDays = Array.from({ length: 7 }, (_, index) => {
+	const date = new Date(monday)
+	date.setDate(monday.getDate() + index)
+	return {
+		date,
+		weekday: weekdayOf(date),
+		weekdayLabel: new Intl.DateTimeFormat('fr-FR', { weekday: 'long' }).format(
+			date
+		),
+		shortLabel: new Intl.DateTimeFormat('fr-FR', { weekday: 'short' }).format(
+			date
+		),
+		label: new Intl.DateTimeFormat('fr-FR', {
+			day: 'numeric',
+			month: 'short'
+		}).format(date),
+	}
+})
+
+let { rooms, getDay } = await loadBooking({
+	from: dateParameter(calendarDays[0].date),
+	to: dateParameter(calendarDays[6].date)
+})
+
+rooms = rooms.filter((room: { slug: string; name: string; location: string; schoolCalendar: boolean }) =>
+	calendarDays.some((day) => getDay(room, day.date).status !== 'empty')
+)
+
+const compactCardForDate = (date: Date) =>
+	rooms.some((room: { slug: string; name: string; location: string; schoolCalendar: boolean }) => getDay(room, date).status !== 'empty')
+---
+
+<AdherentPage
+	title="Réservations"
+	description="Consultez les salles disponibles cette semaine et sélectionnez un créneau."
+>
+	<section>
+		<div class="page-container">
+			<header>
+				<p class="eyebrow">Espace réservation</p>
+				<h1>Liste des salles</h1>
+				<p>
+					Liste des crénaux disponibles par semaines et par salles.
+				</p>
+			</header>
+			<main class="rooms-list">
+				<div class="weeks-container">
+					{
+						weeks.map((week) => {
+							const isSelected = week.start.getTime() === monday.getTime()
+							return (
+								<a
+									class:list={['week-card', isSelected && 'selected']}
+									href={`?week=${dateParameter(week.start)}`}
+								>
+									<strong>{week.label}</strong>
+								</a>
+							)
+						})
+					}
+				</div>
+				{
+					rooms.map((room: { slug: string; name: string; location: string; schoolCalendar: boolean }) => (
+						<article class="room-section">
+							<div class="room-info">
+								<>
+									<p class="eyebrow">{room.location}</p>
+									<h3>{room.name}</h3>
+								</>
+							</div>
+							<div class="room-calendar">
+								{calendarDays.map((day) => {
+									const info = getDay(room, day.date)
+									return (
+										<ReservationDateCard
+                                            href={
+													(info.status === 'empty' || info.status === 'closed' || info.status === 'past')
+													? undefined
+													: (Astro.url.pathname + `${room.slug}/${info.key}`)
+											}
+											dayLabel={day.weekdayLabel}
+											dateLabel={day.label}
+                                            status={info.status}
+											description={info.description}
+											time={info.closed ? 'Vacances scolaires' : info.time}
+											compact={!compactCardForDate(day.date)}
+										/>
+									)
+								})}
+							</div>
+						</article>
+					))
+				}
+			</main>
+		</div>
+	</section>
+</AdherentPage>
+
+<script>
+	const FADE = '2.5rem'
+ 
+	const updateFades = () => {
+		const row = document.querySelector<HTMLElement>('.weeks-container')
+		if (!row) return
+		const max = row.scrollWidth - row.clientWidth
+		row.style.setProperty('--fade-start', row.scrollLeft > 1 ? FADE : '0px')
+		row.style.setProperty('--fade-end', row.scrollLeft < max - 1 ? FADE : '0px')
+	}
+ 
+	const init = () => {
+		const row = document.querySelector<HTMLElement>('.weeks-container')
+		if (!row) return
+		// Recentre la semaine sélectionnée (sans faire défiler la page verticalement)
+		row.querySelector('.week-card.selected')?.scrollIntoView({ inline: 'center', block: 'nearest' })
+		row.addEventListener('scroll', updateFades, { passive: true })
+		updateFades()
+	}
+ 
+	init()
+	document.addEventListener('astro:page-load', init)
+	window.addEventListener('resize', updateFades)
+</script>
+ 
+
+<style>
+	.rooms-list {
+		display: grid;
+		gap: 1rem;
+	}
+	.rooms-heading,
+	.week-navigation {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 2rem;
+	}
+	.week-navigation {
+		justify-content: center;
+	}
+	.week-navigation a {
+		color: var(--primary);
+		font-size: 1.8rem;
+	}
+	.rooms-heading h2 {
+		margin: 0;
+	}
+	.rooms-heading span {
+		font-size: var(--small);
+		opacity: 0.65;
+	}
+	.room-section {
+		display: flex;
+		flex-flow: row nowrap;
+		width: 100%;
+		gap: 1rem;
+		padding: 1rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border05);
+		background: var(--light-secondary);
+	}
+	.room-info {
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+		gap: 0.35rem;
+	}
+	.room-info h3,
+	.room-info p {
+		margin: 0;
+	}
+	.room-info h3 {
+		margin-bottom: 20px;
+		min-width: 170px;
+	}
+	.room-calendar {
+		display: flex;
+		flex-flow: row nowrap;
+		gap: 0.5rem;
+		overflow-x: auto;
+		width: 100%;
+	}
+	.weeks-container {
+		display: flex;
+		flex-flow: row nowrap;
+		gap: 0.25rem;
+		min-width: 0;
+	}
+	.week-card {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 1 1 0;
+		min-width: 0;
+		padding: var(--border05);
+		border-radius: var(--border05);
+		background: var(--light-secondary);
+	}
+	.week-card strong {
+		font-size: var(--medium);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+		.week-card.selected {
+		background: var(--secondary);
+		color: var(--background);
+	}
+
+	@media screen and (max-width: 975px) {
+		.room-section {
+			flex-flow: column nowrap;
+		}
+		.room-info h3 {
+			margin-bottom: 0;
+		}
+		.weeks-container {
+			overflow-x: auto;
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+			-webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+			mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+		}
+		.week-card {
+			flex: 1 0 auto;
+			padding: 0.75rem 1.25rem;
+		}
+	}
+</style>

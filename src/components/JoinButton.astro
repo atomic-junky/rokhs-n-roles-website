@@ -1,7 +1,15 @@
 ---
-import type { HTMLAttributes } from 'astro/types';
+import type { HTMLAttributes } from 'astro/types'
 
-type Props = HTMLAttributes<'a'>;
+type Props = HTMLAttributes<'a'>
 ---
 
-<a class="secondary-button join-button" target="_blank" rel="noopener noreferrer" href="https://www.helloasso.com/associations/rokhs-roles/adhesions/adhesion-rokhs-n-roles-2025-2026/">Nous rejoindre</a>
+<a
+	target="_blank"
+	rel="noopener noreferrer"
+	href="https://www.helloasso.com/associations/rokhs-roles/adhesions/adhesion-rokhs-n-roles-2025-2026/"
+	>
+    <button class="secondary-button join-button">
+        Nous rejoindre
+    </button>
+</a>
