@@ -6,7 +6,7 @@ const SESSION_COOKIE = 'reservation_session';
 const CHALLENGE_COOKIE = 'reservation_challenge';
 const SESSION_TTL = 60 * 60 * 24 * 14; // 14 jours
 const CHALLENGE_TTL = 60 * 10; // 10 minutes
-const ORGANIZATION_EMAIL = "rokhsnroles@gmail.com";
+const ORGANIZATION_EMAIL = "rokhsroles@gmail.com";
 
 const cookieOptions = {
 	httpOnly: true,
@@ -54,9 +54,10 @@ export function normalizeEmail(email: string) {
 }
 
 export async function isMemberFromEmail(email: string) {
-	if (email === ORGANIZATION_EMAIL) return true;
+	const normalizedEmail = normalizeEmail(email);
+	if (normalizedEmail === ORGANIZATION_EMAIL) return true;
 
-	const membershipsPayment = await getHelloAssoMemberships(email);
+	const membershipsPayment = await getHelloAssoMemberships(normalizedEmail);
 	return membershipsPayment.length > 0;
 }
 
